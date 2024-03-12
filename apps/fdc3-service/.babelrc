@@ -1,0 +1,17 @@
+{
+  "presets": [
+    [
+      "@nx/react/babel",
+      {
+        "runtime": "automatic"
+      }
+    ],
+    "@babel/env",
+    "@babel/typescript"
+  ],
+  "plugins": [
+    "@babel/proposal-class-properties",
+    "@babel/proposal-object-rest-spread",
+    "@babel/plugin-transform-runtime"
+  ]
+}

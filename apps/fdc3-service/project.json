@@ -1,0 +1,8 @@
+{
+  "name": "fdc3-service",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/fdc3-service/src",
+  "projectType": "application",
+  "targets": {},
+  "tags": []
+}
