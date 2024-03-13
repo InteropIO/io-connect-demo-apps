@@ -9,7 +9,7 @@ module.exports = {
     clean: true, // Ensures the output directory is cleaned before each build, reducing clutter and potential conflicts.
   },
   devServer: {
-    port: 4201, // Development server configuration remains as you specified, suitable for development needs.
+    port: 3003, // Development server configuration remains as you specified, suitable for development needs.
   },
   module: {
     rules: [

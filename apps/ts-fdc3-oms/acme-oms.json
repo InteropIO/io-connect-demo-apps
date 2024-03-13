@@ -1,30 +1,24 @@
 [
     {
-        "name": "fdc3-oms-chart",
-        "title": "FDC3 Chart",
+        "title": "ChartIQ",
         "type": "window",
+        "name": "chartiq",
         "details": {
-            "title": "FDC3 Chart",
-            "url": "http://localhost:4200/#chart",
-            "mode": "tab",
-            "width": 800,
-            "height": 600,
+            "url": "https://salesdemo-v6.finsemble.com/production/ChartIQ/Finsemble-SD-ChartIQ/technical-analysis-chart.html",
+            "mode":"tab",
+            "width": 914,
+            "height": 639,
+            "minHeight": 400,
+            "minWidth": 500,
+            "allowCollapse": true,
+            "startLocation": "center",
+            "allowChannels": true,
             "autoInjectFdc3": {
-                "enabled": false
+                "enabled": true
             },
-            "fdc3InitsGlue": false
+            "fdc3InitsGlue": true
         },
-        "customProperties": {
-            "includeInWorkspaces": true,
-            "folder": "Acme OMS"
-        },
-        "intents": [
-            {
-                "name": "ViewChart",
-                "displayName": "View instrument chart in FDC3 OMS.",
-                "contexts": ["fdc3.instrument"]
-            }
-        ]
+        "allowMultiple": true
     },
     {
         "name": "fdc3-oms-orders",
@@ -44,7 +38,7 @@
         },
         "customProperties": {
             "includeInWorkspaces": true,
-            "folder": "Acme OMS"
+            "folder": "FDC3 OMS"
         }
     },
     {
@@ -64,12 +58,12 @@
         },
         "customProperties": {
             "includeInWorkspaces": true,
-            "folder": "Acme OMS"
+            "folder": "FDC3 OMS"
         },
         "intents": [
             {
                 "name": "ViewOrderHistory",
-                "displayName": "View order history in Acme OMS.",
+                "displayName": "View order history in FDC3 OMS.",
                 "contexts": ["OrderFilter"]
             }
         ]
@@ -91,7 +85,7 @@
         },
         "customProperties": {
             "includeInWorkspaces": false,
-            "folder": "Acme OMS"
+            "folder": "FDC3 OMS"
         },
         "intents": [
             {
@@ -119,7 +113,7 @@
         },
         "customProperties": {
             "includeInWorkspaces": true,
-            "folder": "Acme OMS"
+            "folder": "FDC3 OMS"
         }
     },
     {
@@ -148,7 +142,7 @@
         "customProperties": {
             "tradesReportXL": "%LocalAppData%/Tick42/Demos/Web/ts-acme-oms/Templates/TradesReport.xltx",
             "includeInWorkspaces": true,
-            "folder": "Acme OMS"
+            "folder": "FDC3 OMS"
         }
     },
     {
@@ -168,7 +162,7 @@
         },
         "customProperties": {
             "includeInWorkspaces": false,
-            "folder": "Acme OMS"
+            "folder": "FDC3 OMS"
         },
         "intents": [
             {
@@ -195,7 +189,7 @@
         },
         "customProperties": {
             "includeInWorkspaces": true,
-            "folder": "Acme OMS"
+            "folder": "FDC3 OMS"
         }
     },
     {
@@ -216,7 +210,7 @@
         },
         "customProperties": {
             "includeInWorkspaces": true,
-            "folder": "Acme OMS"
+            "folder": "FDC3 OMS"
         },
         "intents": [
             {
@@ -244,7 +238,7 @@
         },
         "customProperties": {
             "includeInWorkspaces": true,
-            "folder": "Acme OMS"
+            "folder": "FDC3 OMS"
         }
     },
     {
@@ -279,7 +273,7 @@
         },
         "customProperties": {
             "includeInWorkspaces": false,
-            "folder": "Acme OMS"
+            "folder": "FDC3 OMS"
         }
     },
     {
@@ -298,7 +292,7 @@
         },
         "customProperties": {
             "includeInWorkspaces": false,
-            "folder": "Acme OMS"
+            "folder": "FDC3 OMS"
         }
     }
 ]
