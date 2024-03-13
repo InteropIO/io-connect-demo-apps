@@ -81,7 +81,7 @@ const MarketDepth = (): JSX.Element => {
     }, [id, glue.interop, instruments])
 
     useEffect(() => {
-        let title = 'Acme Market Depth: '
+        let title = 'FDC3 Market Depth: '
 
         if (id && id.RIC) {
             title = title + id.RIC
