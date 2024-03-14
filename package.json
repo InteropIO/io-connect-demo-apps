@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "start": "nx run-many --parallel=10 --target=start --all",
+    "start": "nx run-many --parallel=10 --target=serve --all --verbose",
     "build": "nx run-many --target=build --configuration=production --projects=ts-fdc3-oms,fdc3-service,ts-mocked-data-service",
     "build-ts-fdc3-oms": "nx run ts-fdc3-oms:build:production",
     "build-fdc3-service": "nx run fdc3-service:build:production",

@@ -1,10 +1,10 @@
 [
     {
-        "name": "acme-oms-chart",
-        "title": "Acme Chart",
+        "name": "fdc3-oms-chart",
+        "title": "FDC3 Chart",
         "type": "window",
         "details": {
-            "title": "Acme Chart",
+            "title": "FDC3 Chart",
             "url": "http://localhost:3000/#chart",
             "mode": "tab",
             "width": 800,
@@ -16,22 +16,22 @@
         },
         "customProperties": {
             "includeInWorkspaces": true,
-            "folder": "Acme OMS"
+            "folder": "FDC3 OMS"
         },
         "intents": [
             {
                 "name": "ViewChart",
-                "displayName": "View instrument chart in Acme OMS.",
+                "displayName": "View instrument chart in FDC3 OMS.",
                 "contexts": ["fdc3.instrument"]
             }
         ]
     },
     {
-        "name": "acme-oms-orders",
-        "title": "Acme Orders 🔗",
+        "name": "fdc3-oms-orders",
+        "title": "FDC3 Orders 🔗",
         "type": "window",
         "details": {
-            "title": "Acme Orders",
+            "title": "FDC3 Orders",
             "url": "http://localhost:3000/#orders",
             "mode": "tab",
             "width": 800,
@@ -44,15 +44,15 @@
         },
         "customProperties": {
             "includeInWorkspaces": true,
-            "folder": "Acme OMS"
+            "folder": "FDC3 OMS"
         }
     },
     {
-        "name": "acme-oms-order-history",
-        "title": "Acme Order History",
+        "name": "fdc3-oms-order-history",
+        "title": "FDC3 Order History",
         "type": "window",
         "details": {
-            "title": "Acme OMS",
+            "title": "FDC3 OMS",
             "url": "http://localhost:3000/#orderHistory",
             "mode": "tab",
             "width": 800,
@@ -64,22 +64,22 @@
         },
         "customProperties": {
             "includeInWorkspaces": true,
-            "folder": "Acme OMS"
+            "folder": "FDC3 OMS"
         },
         "intents": [
             {
                 "name": "ViewOrderHistory",
-                "displayName": "View order history in Acme OMS.",
+                "displayName": "View order history in FDC3 OMS.",
                 "contexts": ["OrderFilter"]
             }
         ]
     },
     {
-        "name": "acme-oms-new-order",
-        "title": "Acme Order Entry",
+        "name": "fdc3-oms-new-order",
+        "title": "FDC3 Order Entry",
         "type": "window",
         "details": {
-            "title": "Acme Order Entry",
+            "title": "FDC3 Order Entry",
             "url": "http://localhost:3000/#newOrder",
             "mode": "tab",
             "width": 600,
@@ -91,7 +91,7 @@
         },
         "customProperties": {
             "includeInWorkspaces": false,
-            "folder": "Acme OMS"
+            "folder": "FDC3 OMS"
         },
         "intents": [
             {
@@ -102,11 +102,11 @@
         ]
     },
     {
-        "name": "acme-oms-watchlist",
-        "title": "Acme Watchlist 🔗",
+        "name": "fdc3-oms-watchlist",
+        "title": "FDC3 Watchlist 🔗",
         "type": "window",
         "details": {
-            "title": "Acme Watchlist",
+            "title": "FDC3 Watchlist",
             "url": "http://localhost:3000/#watchlist",
             "mode": "tab",
             "width": 800,
@@ -119,15 +119,15 @@
         },
         "customProperties": {
             "includeInWorkspaces": true,
-            "folder": "Acme OMS"
+            "folder": "FDC3 OMS"
         }
     },
     {
-        "name": "acme-oms-trade-history",
-        "title": "Acme Trade History 🔗",
+        "name": "fdc3-oms-trade-history",
+        "title": "FDC3 Trade History 🔗",
         "type": "window",
         "details": {
-            "title": "Acme Trade History",
+            "title": "FDC3 Trade History",
             "url": "http://localhost:3000/#tradeHistory",
             "mode": "tab",
             "width": 800,
@@ -146,17 +146,17 @@
             }
         ],
         "customProperties": {
-            "tradesReportXL": "%LocalAppData%/Tick42/Demos/Web/ts-acme-oms/Templates/TradesReport.xltx",
+            "tradesReportXL": "%LocalAppData%/Tick42/Demos/Web/ts-fdc3-oms/Templates/TradesReport.xltx",
             "includeInWorkspaces": true,
-            "folder": "Acme OMS"
+            "folder": "FDC3 OMS"
         }
     },
     {
-        "name": "acme-oms-new-trade",
-        "title": "Acme Trade Entry",
+        "name": "fdc3-oms-new-trade",
+        "title": "FDC3 Trade Entry",
         "type": "window",
         "details": {
-            "title": "Acme Trade Entry",
+            "title": "FDC3 Trade Entry",
             "url": "http://localhost:3000/#newTrade",
             "mode": "tab",
             "width": 800,
@@ -168,22 +168,22 @@
         },
         "customProperties": {
             "includeInWorkspaces": false,
-            "folder": "Acme OMS"
+            "folder": "FDC3 OMS"
         },
         "intents": [
             {
                 "name": "NewTrade",
-                "displayName": "Open a new trade dialog in Acme OMS.",
+                "displayName": "Open a new trade dialog in FDC3 OMS.",
                 "contexts": ["fdc3.trade"]
             }
         ]
     },
     {
         "name": "trading-positions",
-        "title": "Acme Trading Positions",
+        "title": "FDC3 Trading Positions",
         "type": "window",
         "details": {
-            "title": "Acme Trading Positions",
+            "title": "FDC3 Trading Positions",
             "url": "http://localhost:3000/#tradingPositions",
             "mode": "tab",
             "width": 800,
@@ -195,15 +195,15 @@
         },
         "customProperties": {
             "includeInWorkspaces": true,
-            "folder": "Acme OMS"
+            "folder": "FDC3 OMS"
         }
     },
     {
-        "name": "acme-oms-market-depth",
-        "title": "Acme Market Depth 🔗",
+        "name": "fdc3-oms-market-depth",
+        "title": "FDC3 Market Depth 🔗",
         "type": "window",
         "details": {
-            "title": "Acme Market Depth",
+            "title": "FDC3 Market Depth",
             "url": "http://localhost:3000/#marketDepth",
             "mode": "tab",
             "width": 800,
@@ -216,7 +216,7 @@
         },
         "customProperties": {
             "includeInWorkspaces": true,
-            "folder": "Acme OMS"
+            "folder": "FDC3 OMS"
         },
         "intents": [
             {
@@ -227,11 +227,11 @@
         ]
     },
     {
-        "name": "acme-oms-portfolio",
-        "title": "Acme Portfolio 🔗",
+        "name": "fdc3-oms-portfolio",
+        "title": "FDC3 Portfolio 🔗",
         "type": "window",
         "details": {
-            "title": "Acme Portfolio",
+            "title": "FDC3 Portfolio",
             "url": "http://localhost:3000/#portfolio",
             "mode": "tab",
             "width": 800,
@@ -244,7 +244,7 @@
         },
         "customProperties": {
             "includeInWorkspaces": true,
-            "folder": "Acme OMS"
+            "folder": "FDC3 OMS"
         }
     },
     {
@@ -264,14 +264,14 @@
         }
     },
     {
-        "name": "acme-service",
-        "title": "Acme Service",
+        "name": "fdc3-service",
+        "title": "FDC3 Service",
         "type": "window",
         "service": true,
         "autoStart": false,
         "hidden": true,
         "details": {
-            "title": "Acme Service",
+            "title": "FDC3 Service",
             "url": "http://localhost:3001",
             "mode": "tab",
             "width": 600,
@@ -279,7 +279,7 @@
         },
         "customProperties": {
             "includeInWorkspaces": false,
-            "folder": "Acme OMS"
+            "folder": "FDC3 OMS"
         }
     }
 ]
