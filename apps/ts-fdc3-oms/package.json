@@ -28,7 +28,7 @@
     "react-scripts": "^5.0.1"
   },
   "scripts": {
-    "start": "vite",
+    "start": "vite --port 4200",
     "build": "tsc && vite build",
     "test": "echo \"No tests\""
   },
