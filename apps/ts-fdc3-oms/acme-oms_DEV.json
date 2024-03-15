@@ -96,7 +96,7 @@
         "intents": [
             {
                 "name": "NewOrder",
-                "displayName": "Open a new order dialog in Acme OMS.",
+                "displayName": "Open a new order dialog in FDC3 OMS.",
                 "contexts": ["fdc3.order"]
             }
         ]

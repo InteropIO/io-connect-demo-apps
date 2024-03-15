@@ -25,7 +25,7 @@ interface MethodRegistrationItem {
     handler: (args: any, caller: any) => any
 }
 
-class AcmeService {
+class FDC3Service {
     private glue: any
     private methods: MethodRegistrationItem[]
     private clientSyncedId: string
@@ -342,7 +342,7 @@ class AcmeService {
             (h: any) => h.type === 'instance'
         )
 
-        return handler && handler.applicationName === 'acme-oms-order-history'
+        return handler && handler.applicationName === 'fdc3-oms-order-history'
     }
 
     private getSfId = ({ ids }: any) => {
@@ -351,4 +351,4 @@ class AcmeService {
     }
 }
 
-export default AcmeService
+export default FDC3Service
