@@ -4,10 +4,18 @@
   "license": "MIT",
   "scripts": {
     "start": "nx run-many --parallel=10 --target=serve --all",
+    "bootstrap": "concurrently \"npm run setup-ts-fdc3-oms\" \"npm run setup-ts-mocked-data-service\" \"npm run setup-fdc3-service\"",
+    "clear": "concurrently \"npm run clear-ts-fdc3-oms\" \"npm run clear-ts-mocked-data-service\" \"npm run clear-fdc3-service\"",
+    "setup-ts-fdc3-oms": "cd ./apps/ts-fdc3-oms && npm install",
+    "setup-ts-mocked-data-service": "cd ./apps/ts-mocked-data-service && npm install",
+    "setup-fdc3-service": "cd ./apps/fdc3-service && npm install",
     "build": "nx run-many --target=build --configuration=production --projects=ts-fdc3-oms,fdc3-service,ts-mocked-data-service",
     "build-ts-fdc3-oms": "nx run ts-fdc3-oms:build:production",
     "build-fdc3-service": "nx run fdc3-service:build:production",
-    "build-ts-mocked-data-service": "nx run ts-mocked-data-service:build:production"
+    "build-ts-mocked-data-service": "nx run ts-mocked-data-service:build:production",
+    "clear-ts-fdc3-oms": "rimraf ./apps/ts-fdc3-oms/node_modules",
+    "clear-ts-mocked-data-service": "rimraf ./apps/ts-mocked-data-service/node_modules",
+    "clear-fdc3-service": "rimraf ./apps/fdc3-service/node_modules"
   },
   "private": true,
   "devDependencies": {
@@ -42,6 +50,7 @@
     "@vitest/coverage-v8": "^1.0.4",
     "@vitest/ui": "^1.3.1",
     "babel-jest": "^29.4.1",
+    "concurrently": "^8.2.2",
     "eslint": "~8.48.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-import": "2.27.5",
@@ -54,6 +63,7 @@
     "nx": "18.0.8",
     "prettier": "^2.6.2",
     "react-refresh": "^0.10.0",
+    "rimraf": "^5.0.5",
     "ts-jest": "^29.1.0",
     "ts-node": "10.9.1",
     "typescript": "~5.3.2",
