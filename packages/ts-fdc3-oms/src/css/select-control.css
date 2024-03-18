@@ -1,0 +1,11 @@
+.select-minpadding .select__control .select__value-container {
+    padding: 0 4px;
+}
+
+.select-minpadding .select__control .select__indicator {
+    padding: 0 1px;
+}
+
+.dark .select__input-container {
+    /* color: var(--t42-content-color) */
+}
