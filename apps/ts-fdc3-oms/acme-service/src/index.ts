@@ -1,7 +1,7 @@
-import FDC3Service from './fdc3Service'
+import AcmeService from './acmeService'
 
 const start = async (glue: any): Promise<any> => {
-    const service = new FDC3Service(glue)
+    const service = new AcmeService(glue)
     await service.initialize()
 }
 

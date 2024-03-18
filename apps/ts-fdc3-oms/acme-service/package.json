@@ -1,10 +1,9 @@
 {
-    "name": "fdc3-service",
+    "name": "acme-service",
     "version": "0.1.0",
     "description": "",
     "main": "index.js",
     "scripts": {
-        "start": "npx http-server ./dist --port 3001",
         "clean": "rimraf ./dist",
         "build:types": "tsc",
         "build:dev": "npm run clean && npm run build:types && webpack --mode=development",
