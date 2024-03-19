@@ -1,0 +1,23 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Mock Data Generator</title><script>window.addEventListener('DOMContentLoaded', (event) => {
+        async function main() {
+          if (window.Glue) {
+            window.glue = await window.Glue({
+              channels: true,
+              appManager: 'skipIcons',
+            })
+            const myInstance = glue.appManager?.myInstance
+            const userProps = myInstance?.application?.userProperties
+            const options = userProps?.mockServiceOptions
+            /*
+            const options = {
+              mockToday = "", // "2022-08-31T00:00:00",
+              tradeOpenHours = "09:00:00.000",
+              tradeOpenHours = "16:30:00.000",
+              maxOrdersPerDay = 120,
+            }
+            */
+            await MockDataGenerator(window.glue, options)
+          }
+        }
+        main()
+      })</script><script defer="defer" src="data-service-0.1.0.js"></script></head><body></body></html>

@@ -1,0 +1,21 @@
+#root {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.dark .ag-tick42 .ag-row .ag-cell,
+.light .ag-tick42 .ag-row .ag-cell {
+  line-height: 1.5rem;
+  padding: 0 0.5rem;
+}
+
+.ag-tick42 .ag-cell input {
+  padding: 0 0.5rem;
+  margin-left: -0.188rem;
+}
+
+.ag-tick42 .ag-cell:focus,
+.ag-tick42 .ag-header-cell:focus {
+  outline: none;
+}

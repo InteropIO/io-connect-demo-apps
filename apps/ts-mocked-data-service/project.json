@@ -1,8 +1,0 @@
-{
-  "name": "ts-mocked-data-service",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/ts-mocked-data-service/src",
-  "projectType": "application",
-  "targets": {},
-  "tags": []
-}

@@ -1,8 +1,0 @@
-{
-  "name": "ts-fdc3-oms",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/ts-fdc3-oms/src",
-  "projectType": "application",
-  "targets": {},
-  "tags": []
-}
