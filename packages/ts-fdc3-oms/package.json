@@ -31,11 +31,13 @@
   "devDependencies": {
     "@types/lodash.startcase": "^4.4.7",
     "@types/uuid": "^8.3.4",
+    "concurrently": "^8.2.2",
     "eslint-config-prettier": "^8.5.0",
     "react-scripts": "^5.0.1"
   },
   "scripts": {
-    "start": "set BROWSER=none && react-scripts start && npm run start:acme-service",
+    "start": "concurrently \"npm run dev\" \"npm run start:acme-service\"",
+    "dev": "set BROWSER=none && react-scripts start",
     "start:acme-service": "npx http-server acme-service/dist --port 3001",
     "build": "react-scripts build",
     "test": "echo \"No tests\"",
