@@ -152,9 +152,6 @@ export const useIntents = (): IntentsApi | undefined => {
         }
 
         if (windowAny.fdc3) {
-            windowAny.fdc3
-                .fdc3Ready()
-                .then(() => {
                     console.log(
                         'FDC3 is ready. Using fdc3 library as intents provider.'
                     )
@@ -177,13 +174,6 @@ export const useIntents = (): IntentsApi | undefined => {
                             )
                         },
                     })
-                })
-                .catch((err: Error) => {
-                    console.warn('FDC3 ready event failed. Error: ', err)
-                    console.log('Using glue library as intents provider.')
-
-                    setIntentsApi(glueApi)
-                })
         } else {
             console.log(
                 'FDC3 library not injected. Using glue library as intents provider.'
@@ -300,10 +290,7 @@ export const useAddTradeHistoryIntentListener = (
         }
 
         const listener = intentsApi?.addIntentListener(
-            {
-                intent: intentName,
-                contextTypes: ['fdc3.order'],
-            },
+            intentName,
             contextHandler
         )
 

@@ -11,9 +11,9 @@
     "setup-ts-fdc3-oms": "cd ./packages/ts-fdc3-oms && npm install",
     "setup-ts-mocked-data-service": "cd ./packages/ts-mocked-data-service && npm install",
     "setup-acme-service": "cd ./packages/ts-fdc3-oms/acme-service && npm install",
-    "clear-ts-fdc3-oms": "rimraf ./apps/ts-fdc3-oms/node_modules",
-    "clear-ts-mocked-data-service": "rimraf ./apps/ts-mocked-data-service/node_modules",
-    "clear-acme-service": "rimraf ./apps/ts-fdc3-oms/acme-service/node_modules"
+    "clear-ts-fdc3-oms": "rimraf ./packages/ts-fdc3-oms/node_modules",
+    "clear-ts-mocked-data-service": "rimraf ./packages/ts-mocked-data-service/node_modules",
+    "clear-acme-service": "rimraf ./packages/ts-fdc3-oms/acme-service/node_modules"
   },
   "devDependencies": {
     "concurrently": "^8.2.2",

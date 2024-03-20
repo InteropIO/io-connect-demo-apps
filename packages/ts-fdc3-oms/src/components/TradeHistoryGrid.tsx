@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { GlueContext } from '@glue42/react-hooks'
 import { Fdc3Order } from '../models/fdc3-order'
-import { ColDef, GetContextMenuItemsParams, RowNode } from 'ag-grid-community'
+import { ColDef, GetContextMenuItemsParams, GetRowIdParams, RowNode } from 'ag-grid-community'
 import useGridHelper from '../hooks/GridHelper'
 import { useCorrectRowSelection, GlueT } from '../util/glue'
 import { OrderTrade } from '../models/orders'
@@ -127,11 +127,7 @@ const TradeHistoryGrid = (props: TradeHistoryGridProps): JSX.Element => {
     const viewInstrument = useViewInstrument()
     useCorrectRowSelection(grid?.api?.getSelectedNodes(), instrumentContext)
 
-    const onRowDataUpdated = (params: any) => {
-        console.log(params)
-        params.api.sizeColumnsToFit()
-    }
-    const getRowNodeId = (data: OrderTrade) =>
+    const getRowNodeId = ({ data }: GetRowIdParams<OrderTrade>) =>
         data.sliceId.toString() + data.timestamp.toISOString()
 
     useEffect(() => {
@@ -308,14 +304,11 @@ const TradeHistoryGrid = (props: TradeHistoryGridProps): JSX.Element => {
                         defaultColDef={defaultColumnDef}
                         rowData={rowData}
                         context={{ sidesMap: orderSides }}
-                        immutableData={true}
                         rowSelection={'multiple'}
-                        getRowNodeId={getRowNodeId}
-                        onRowDataChanged={onRowDataUpdated}
+                        getRowId={getRowNodeId}
                         columnDefs={columnDefsTrade}
                         onGridReady={(param) => {
                             grid.onGridReady(param)
-                            //grid.api?.setColumnDefs(columnDefsTrade)
                             param?.api.sizeColumnsToFit()
                         }}
                         onGridSizeChanged={({ api }) => {
