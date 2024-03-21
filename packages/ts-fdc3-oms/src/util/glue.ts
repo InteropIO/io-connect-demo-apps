@@ -152,38 +152,35 @@ export const useIntents = (): IntentsApi | undefined => {
         }
 
         if (windowAny.fdc3) {
-            windowAny.fdc3
-                .fdc3Ready()
-                .then(() => {
-                    console.log(
-                        'FDC3 is ready. Using fdc3 library as intents provider.'
-                    )
-                    setIntentsApi({
-                        addIntentListener:
-                            windowAny.fdc3.addIntentListener.bind(
-                                windowAny.fdc3
-                            ),
-                        raise: async (
-                            intent: string,
-                            context: Context,
-                            target?: any
-                        ) => {
-                            console.log('raising intent...')
-                            console.log(intent, '/', context, '/', target)
-                            await windowAny.fdc3.raiseIntent(
-                                intent,
-                                context,
-                                target
-                            )
-                        },
-                    })
-                })
-                .catch((err: Error) => {
-                    console.warn('FDC3 ready event failed. Error: ', err)
-                    console.log('Using glue library as intents provider.')
+            console.log(
+                'FDC3 is ready. Using fdc3 library as intents provider.'
+            )
+            setIntentsApi({
+                addIntentListener: windowAny.fdc3.addIntentListener.bind(
+                    windowAny.fdc3
+                ),
+                raise: async (
+                    intent: string,
+                    context: Context,
+                    target?: any
+                ) => {
+                    console.log('raising intent...')
+                    console.log(intent, '/', context, '/', target)
 
-                    setIntentsApi(glueApi)
-                })
+                    const resolution = await windowAny.fdc3.raiseIntent(
+                        intent,
+                        context,
+                        target
+                    )
+                    try {
+                        await resolution.getResult()
+                    } catch (err) {
+                        console.error(
+                            `${resolution.source} returned a result error: ${err}`
+                        )
+                    }
+                },
+            })
         } else {
             console.log(
                 'FDC3 library not injected. Using glue library as intents provider.'
@@ -300,10 +297,7 @@ export const useAddTradeHistoryIntentListener = (
         }
 
         const listener = intentsApi?.addIntentListener(
-            {
-                intent: intentName,
-                contextTypes: ['fdc3.order'],
-            },
+            intentName,
             contextHandler
         )
 
