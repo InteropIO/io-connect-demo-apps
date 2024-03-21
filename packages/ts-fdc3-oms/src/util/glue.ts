@@ -152,28 +152,35 @@ export const useIntents = (): IntentsApi | undefined => {
         }
 
         if (windowAny.fdc3) {
-                    console.log(
-                        'FDC3 is ready. Using fdc3 library as intents provider.'
+            console.log(
+                'FDC3 is ready. Using fdc3 library as intents provider.'
+            )
+            setIntentsApi({
+                addIntentListener: windowAny.fdc3.addIntentListener.bind(
+                    windowAny.fdc3
+                ),
+                raise: async (
+                    intent: string,
+                    context: Context,
+                    target?: any
+                ) => {
+                    console.log('raising intent...')
+                    console.log(intent, '/', context, '/', target)
+
+                    const resolution = await windowAny.fdc3.raiseIntent(
+                        intent,
+                        context,
+                        target
                     )
-                    setIntentsApi({
-                        addIntentListener:
-                            windowAny.fdc3.addIntentListener.bind(
-                                windowAny.fdc3
-                            ),
-                        raise: async (
-                            intent: string,
-                            context: Context,
-                            target?: any
-                        ) => {
-                            console.log('raising intent...')
-                            console.log(intent, '/', context, '/', target)
-                            await windowAny.fdc3.raiseIntent(
-                                intent,
-                                context,
-                                target
-                            )
-                        },
-                    })
+                    try {
+                        await resolution.getResult()
+                    } catch (err) {
+                        console.error(
+                            `${resolution.source} returned a result error: ${err}`
+                        )
+                    }
+                },
+            })
         } else {
             console.log(
                 'FDC3 library not injected. Using glue library as intents provider.'
