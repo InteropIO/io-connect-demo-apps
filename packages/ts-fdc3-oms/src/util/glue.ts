@@ -283,8 +283,6 @@ export const useAddTradeHistoryIntentListener = (
     const intentsApi = useIntents()
     useEffect(() => {
         function contextHandler(contextData: any) {
-            // eslint-disable-next-line no-debugger
-            // debugger;
             if (contextData == null || contextData.type !== FDC3_ORDER) {
                 console.log(
                     `${intentName} intent context's "type" must be ${FDC3_ORDER}. Received `,

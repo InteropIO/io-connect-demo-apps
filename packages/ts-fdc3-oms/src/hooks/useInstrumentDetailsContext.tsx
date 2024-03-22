@@ -45,22 +45,21 @@ const useInstrumentDetailsContext = (): UseInstrumentDetailsContext => {
         [glue]
     )
 
-    const setSymbolFromSource = useCallback(async () => {
-        const setCtxSymbol = (ctx: InstrumentDetailsContext) => {
-            const RIC = ctx.instrument?.id?.RIC?.split(
-                SPLIT_INSTRUMENT_RIC_REGEX
-            )
-            if (RIC && RIC.length > 1) {
-                setFdc3Instrument({
-                    type: 'fdc3.instrument',
-                    id: {
-                        ticker: RIC[0],
-                        RIC: formatInstrument(RIC[0], RIC[1]),
-                    },
-                })
-            }
+    const setCtxSymbol = (ctx: InstrumentDetailsContext) => {
+        const RIC = ctx.instrument?.id?.RIC?.split(
+            SPLIT_INSTRUMENT_RIC_REGEX
+        )
+        if (RIC && RIC.length > 1) {
+            setFdc3Instrument({
+                type: 'fdc3.instrument',
+                id: {
+                    ticker: RIC[0],
+                    RIC: formatInstrument(RIC[0], RIC[1]),
+                },
+            })
         }
-
+    }
+    const setSymbolFromSource = useCallback(async () => {
         // Channel's context has top precedence.
         if (isOnChannel()) {
             console.log(
@@ -93,78 +92,87 @@ const useInstrumentDetailsContext = (): UseInstrumentDetailsContext => {
             .get(INSTRUMENT_DETAILS)
             .then(setCtxSymbol)
             .catch(console.error)
-    }, [setFdc3Instrument, isInWorkspace, isOnChannel, glue])
+        }, [setFdc3Instrument, isInWorkspace, isOnChannel, glue])
 
-    useEffect(
-        function subscribeToContextsUpdates() {
-            const subscriptionPromise = glue.contexts.subscribe(
-                INSTRUMENT_DETAILS,
-                () => {
-                    setSymbolFromSource()
-                }
-            )
-
-            const unsubscribeChannels = glue.channels.subscribe(() => {
-                setSymbolFromSource()
-            })
-
-            return () => {
-                subscriptionPromise.then(
-                    (unsubscribe) => unsubscribe(),
-                    console.error
+    // there is where we are subscribing to changes
+    if (window.fdc3) {
+        // we do this if we have fdc3 enabled
+        window.fdc3.addContextListener('fdc3.instrument', (context) => {
+            setCtxSymbol({ instrument: context })
+        })
+    } else {
+        // otherwise we use glue channels and workspace context
+        useEffect(
+            function subscribeToContextsUpdates() {
+                const subscriptionPromise = glue.contexts.subscribe(
+                    INSTRUMENT_DETAILS,
+                    () => {
+                        setSymbolFromSource()
+                    }
                 )
 
-                unsubscribeChannels()
-            }
-        },
-        [setSymbolFromSource, glue]
-    )
-
-    useEffect(
-        function subscribeToWorkspaceContextUpdates() {
-            const subscriptionPromise = myWorkspace?.onContextUpdated(() => {
-                setSymbolFromSource()
-            })
-
-            return () => {
-                subscriptionPromise?.then(
-                    (unsubscribe) => unsubscribe(),
-                    console.error
-                )
-            }
-        },
-        [myWorkspace, setSymbolFromSource]
-    )
-
-    useEffect(
-        function subscribeOnContextSourceChange() {
-            glue.channels.onChanged(() => {
-                setSymbolFromSource()
-            })
-
-            glue.workspaces?.getMyWorkspace().then((wsp) => {
-                if (wsp !== null) {
-                    setMyWorkspace(wsp)
+                const unsubscribeChannels = glue.channels.subscribe(() => {
                     setSymbolFromSource()
-                }
-            })
-            glue.workspaces?.onWindowAdded(async () => {
-                const myWorkspace = await glue.workspaces
-                    ?.getMyWorkspace()
-                    .catch(() => null)
+                })
 
-                if (myWorkspace != null) {
-                    setMyWorkspace(myWorkspace)
+                return () => {
+                    subscriptionPromise.then(
+                        (unsubscribe) => unsubscribe(),
+                        console.error
+                    )
+
+                    unsubscribeChannels()
+                }
+            },
+            [setSymbolFromSource, glue]
+        )
+
+        useEffect(
+            function subscribeToWorkspaceContextUpdates() {
+                const subscriptionPromise = myWorkspace?.onContextUpdated(() => {
                     setSymbolFromSource()
-                }
-            })
+                })
 
-            glue.workspaces?.onWindowRemoved(() => {
-                setSymbolFromSource()
-            })
+                return () => {
+                    subscriptionPromise?.then(
+                        (unsubscribe) => unsubscribe(),
+                        console.error
+                    )
+                }
+            },
+            [myWorkspace, setSymbolFromSource]
+        )
+
+        useEffect(
+            function subscribeOnContextSourceChange() {
+                glue.channels.onChanged(() => {
+                    setSymbolFromSource()
+                })
+
+                glue.workspaces?.getMyWorkspace().then((wsp) => {
+                    if (wsp !== null) {
+                        setMyWorkspace(wsp)
+                        setSymbolFromSource()
+                    }
+                })
+                glue.workspaces?.onWindowAdded(async () => {
+                    const myWorkspace = await glue.workspaces
+                        ?.getMyWorkspace()
+                        .catch(() => null)
+
+                    if (myWorkspace != null) {
+                        setMyWorkspace(myWorkspace)
+                        setSymbolFromSource()
+                    }
+                })
+
+                glue.workspaces?.onWindowRemoved(() => {
+                    setSymbolFromSource()
+                })
         },
-        [setSymbolFromSource, glue]
-    )
+        [setSymbolFromSource, glue])
+
+    }
 
     const publish = useCallback(
         async ({ ticker, BBG_EXCHANGE }: Fdc3InstrumentId) => {
@@ -187,19 +195,23 @@ const useInstrumentDetailsContext = (): UseInstrumentDetailsContext => {
                 },
             }
 
-            if (isOnChannel()) {
-                return glue.channels.publish(data)
-            }
-
-            const inWsp = await isInWorkspace()
-            if (inWsp) {
-                return glue.workspaces
-                    ?.getMyWorkspace()
-                    .then((wsp) => wsp.updateContext(data))
-                    .catch(console.error)
-            }
-
-            return glue.contexts.update(INSTRUMENT_DETAILS, data)
+            if (window.fdc3) {
+                                return window.fdc3.broadcast(data.instrument)
+            } else {
+                if (isOnChannel()) {
+                    return glue.channels.publish(data)
+                }
+    
+                const inWsp = await isInWorkspace()
+                if (inWsp) {
+                    return glue.workspaces
+                        ?.getMyWorkspace()
+                        .then((wsp) => wsp.updateContext(data))
+                        .catch(console.error)
+                }
+    
+                return glue.contexts.update(INSTRUMENT_DETAILS, data)
+            }            
         },
         [isOnChannel, isInWorkspace, glue]
     )
