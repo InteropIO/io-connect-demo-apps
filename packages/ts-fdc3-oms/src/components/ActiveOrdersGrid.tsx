@@ -8,6 +8,7 @@ import React, {
 import { GlueContext } from '@glue42/react-hooks'
 import {
     GetContextMenuItemsParams,
+    GetRowIdParams,
     GridApi,
     MenuItemDef,
     RowClassParams,
@@ -93,7 +94,7 @@ const parseUrl = (url: string) => {
     result['urlHash'] = hash
     return result
 }
-const getOrderRowNodeId = (data: OrderInfo) => data.orderId.toString()
+const getOrderRowId = (params: GetRowIdParams<OrderInfo>) => params.data.orderId.toString()
 const getOrderSliceRowNodeId = (data: OrderInfo) => data.sliceId?.toString()
 const getRowStyle = (params: RowClassParams): RowStyle => {
     const style: React.CSSProperties = {}
@@ -121,7 +122,6 @@ const switchHashToHistory = () => {
 let glue: GlueApiT | undefined = undefined
 
 const ActiveOrdersGrid = (props: OrderGridParam): JSX.Element => {
-    // console.log("ActiveOrdersGrid()")
     const { urlHash, urlFromDate, urlToDate } = parseUrl(window.location.href)
     const historyView = urlHash === HASH_ORDER_HISTORY
 
@@ -189,13 +189,13 @@ const ActiveOrdersGrid = (props: OrderGridParam): JSX.Element => {
 
     useEffect(() => {
         if (!historyView) {
-            glue?.windows.my().setTitle('Acme Orders')
+            glue?.windows.my().setTitle('FDC3 Orders')
             const timer = setInterval(() => {
                 setTime(new Date())
             }, 5000)
             return () => clearInterval(timer)
         } else {
-            glue?.windows.my().setTitle('Acme Order History')
+            glue?.windows.my().setTitle('FDC3 Order History')
         }
     }, [historyView])
 
@@ -308,17 +308,6 @@ const ActiveOrdersGrid = (props: OrderGridParam): JSX.Element => {
         },
         [props]
     )
-
-    /*
-  const updateOrders = async () => {
-    console.log("updateOrders()")
-    const orders = await getOrders(getMockTime(time,timeOffset))
-    setRowData(orders)
-  
-    //const myTransaction = {update: getOrderData()}
-    //grid.api?.applyTransactionAsync(myTransaction)
-  }
-  */
 
     const onRowDataUpdated = useCallback(
         (params: any) => {
@@ -588,15 +577,13 @@ const ActiveOrdersGrid = (props: OrderGridParam): JSX.Element => {
                         defaultColDef={defaultColumnDef}
                         rowData={rowData}
                         context={gridContext}
-                        immutableData={true}
                         rowSelection={'multiple'}
-                        getRowNodeId={getOrderRowNodeId}
+                        getRowId={getOrderRowId}
                         getRowStyle={getRowStyle}
                         suppressContextMenu={false}
                         allowContextMenuWithControlKey={true}
                         getContextMenuItems={getContextMenuItems}
-                        //onRowDataUpdated={onRowDataUpdated}
-                        onRowDataChanged={onRowDataUpdated}
+                        onRowDataUpdated={onRowDataUpdated}
                         onRowClicked={onRowClicked}
                         columnDefs={columnDefsOrders}
                         onGridReady={grid.onGridReady}
@@ -612,5 +599,4 @@ const ActiveOrdersGrid = (props: OrderGridParam): JSX.Element => {
     )
 }
 
-//export default React.forwardRef(ActiveOrdersGrid)
 export default ActiveOrdersGrid
