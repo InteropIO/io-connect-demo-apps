@@ -3,6 +3,7 @@ import { GlueContext } from '@glue42/react-hooks'
 import { AgGridReact } from 'ag-grid-react'
 import {
     GetContextMenuItemsParams,
+    GetRowIdParams,
     MenuItemDef,
     RowNode,
 } from 'ag-grid-community'
@@ -364,8 +365,9 @@ const Watchlist = (): JSX.Element => {
                     rowData={watchlistInstruments}
                     rowSelection="multiple"
                     columnDefs={columnDefsWatchlist}
-                    immutableData={true}
-                    getRowNodeId={(data: WatchlistInstrument) => data.id}
+                    getRowId={({ data }: GetRowIdParams<WatchlistInstrument>) =>
+                        data.id
+                    }
                     onRowClicked={onRowClicked}
                     getContextMenuItems={getContextMenuItems}
                     cellFadeDelay={500}

@@ -38,7 +38,7 @@ const NewWatchlistModal = ({
                     <input
                         className="form-control"
                         placeholder="Enter watchlist name"
-                        onKeyPress={handleKeyPress}
+                        onKeyDown={handleKeyPress}
                         onChange={(e) => {
                             textboxValue = e.target.value
                         }}

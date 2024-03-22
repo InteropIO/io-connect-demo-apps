@@ -164,18 +164,26 @@ const useStoreWatchlist = (): {
         //add id to instrument
         const customID = uuidv4()
         setSelectedWatchlist((prevState: Fdc3InstrumentList | undefined) => {
-            return prevState
-                ? {
-                      ...prevState,
-                      instruments: [
-                          ...prevState.instruments,
-                          {
-                              ...instrument,
-                              id: { ...instrument.id, customID },
-                          },
-                      ],
-                  }
-                : prevState
+            if (!prevState) return
+
+            const hasInstrument = prevState.instruments.find(
+                ({ id }) => id?.RIC === instrument.id?.RIC
+            )
+
+            if (hasInstrument) {
+                return prevState
+            }
+
+            return {
+                ...prevState,
+                instruments: [
+                    ...prevState.instruments,
+                    {
+                        ...instrument,
+                        id: { ...instrument.id, customID },
+                    },
+                ],
+            }
         })
     }
 
