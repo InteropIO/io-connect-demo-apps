@@ -189,13 +189,13 @@ const ActiveOrdersGrid = (props: OrderGridParam): JSX.Element => {
 
     useEffect(() => {
         if (!historyView) {
-            glue?.windows.my().setTitle('Acme Orders')
+            glue?.windows.my().setTitle('FDC3 Orders')
             const timer = setInterval(() => {
                 setTime(new Date())
             }, 5000)
             return () => clearInterval(timer)
         } else {
-            glue?.windows.my().setTitle('Acme Order History')
+            glue?.windows.my().setTitle('FDC3 Order History')
         }
     }, [historyView])
 
