@@ -8,9 +8,7 @@ import { formatInstrumentForBbg, formatInstrument } from '../util/util'
 const INSTRUMENT_DETAILS = 'instrumentDetails'
 
 interface InstrumentDetailsContext {
-    instrument?: {
-        id?: Fdc3InstrumentId
-    }
+    id?: Fdc3InstrumentId
 }
 
 interface UseInstrumentDetailsContext {
@@ -29,7 +27,11 @@ const useInstrumentDetailsContext = (): UseInstrumentDetailsContext => {
         Glue42Workspaces.Workspace | undefined
     >()
 
-    const isOnChannel = useCallback(() => glue.channels.my() != null, [glue])
+    const isOnChannel = useCallback(
+        async () =>
+            window.fdc3 && (await window.fdc3.getCurrentChannel()) != null,
+        [window.fdc3]
+    )
 
     const isInWorkspace = useCallback(
         () =>
@@ -47,9 +49,7 @@ const useInstrumentDetailsContext = (): UseInstrumentDetailsContext => {
 
     const setSymbolFromSource = useCallback(async () => {
         const setCtxSymbol = (ctx: InstrumentDetailsContext) => {
-            const RIC = ctx.instrument?.id?.RIC?.split(
-                SPLIT_INSTRUMENT_RIC_REGEX
-            )
+            const RIC = ctx.id?.RIC?.split(SPLIT_INSTRUMENT_RIC_REGEX)
             if (RIC && RIC.length > 1) {
                 setFdc3Instrument({
                     type: 'fdc3.instrument',
@@ -62,19 +62,31 @@ const useInstrumentDetailsContext = (): UseInstrumentDetailsContext => {
         }
 
         // Channel's context has top precedence.
-        if (isOnChannel()) {
+        const onChannel = await isOnChannel()
+        if (onChannel) {
             console.log(
                 '[useInstrumentDetailsContext] getting instrument details from channel ctx...'
             )
 
-            const myChannel = glue.channels.my()
-            return glue.channels
-                .get(myChannel)
-                .then(({ data }) => setCtxSymbol(data))
+            return await window.fdc3
+                .addContextListener('fdc3.instrument', (contextData) => {
+                    if (
+                        contextData == null ||
+                        contextData.type !== 'fdc3.instrument'
+                    ) {
+                        console.log(
+                            `Symbol context's "type" must be 'fdc3.instrument'. Received `,
+                            contextData?.type
+                        )
+                        return
+                    }
+                    console.log('contextData', contextData)
+                    setCtxSymbol(contextData)
+                })
                 .catch(console.error)
         }
 
-        // Workspace context has lease precedence than channels.
+        // Workspace context has less precedence than channels.
         const inWsp = await isInWorkspace()
         const myWsp = await glue.workspaces?.getMyWorkspace().catch(() => null)
         if (inWsp && myWsp != null) {
@@ -95,8 +107,10 @@ const useInstrumentDetailsContext = (): UseInstrumentDetailsContext => {
             .catch(console.error)
     }, [setFdc3Instrument, isInWorkspace, isOnChannel, glue])
 
-    useEffect(
-        function subscribeToContextsUpdates() {
+    useEffect(() => {
+        async function subscribeToContextsUpdates() {
+            const listener = await setSymbolFromSource()
+
             const subscriptionPromise = glue.contexts.subscribe(
                 INSTRUMENT_DETAILS,
                 () => {
@@ -104,21 +118,18 @@ const useInstrumentDetailsContext = (): UseInstrumentDetailsContext => {
                 }
             )
 
-            const unsubscribeChannels = glue.channels.subscribe(() => {
-                setSymbolFromSource()
-            })
-
             return () => {
+                if (listener) listener.unsubscribe()
+
                 subscriptionPromise.then(
                     (unsubscribe) => unsubscribe(),
                     console.error
                 )
-
-                unsubscribeChannels()
             }
-        },
-        [setSymbolFromSource, glue]
-    )
+        }
+
+        subscribeToContextsUpdates()
+    }, [setSymbolFromSource, glue])
 
     useEffect(
         function subscribeToWorkspaceContextUpdates() {
@@ -138,10 +149,6 @@ const useInstrumentDetailsContext = (): UseInstrumentDetailsContext => {
 
     useEffect(
         function subscribeOnContextSourceChange() {
-            glue.channels.onChanged(() => {
-                setSymbolFromSource()
-            })
-
             glue.workspaces?.getMyWorkspace().then((wsp) => {
                 if (wsp !== null) {
                     setMyWorkspace(wsp)
@@ -177,18 +184,17 @@ const useInstrumentDetailsContext = (): UseInstrumentDetailsContext => {
             const BBG = formatInstrumentForBbg(ticker, BBG_EXCHANGE)
 
             const data = {
-                instrument: {
-                    type: 'fdc3.instrument',
-                    id: {
-                        ticker,
-                        RIC,
-                        BBG
-                    },
+                type: 'fdc3.instrument',
+                id: {
+                    ticker,
+                    RIC,
+                    BBG,
                 },
             }
 
-            if (isOnChannel()) {
-                return glue.channels.publish(data)
+            const onChannel = await isOnChannel()
+            if (onChannel) {
+                return window.fdc3?.broadcast(data)
             }
 
             const inWsp = await isInWorkspace()
