@@ -80,7 +80,7 @@ const useInstrumentDetailsContext = (): UseInstrumentDetailsContext => {
                         )
                         return
                     }
-                    console.log('contextData', contextData)
+
                     setCtxSymbol(contextData)
                 })
                 .catch(console.error)
