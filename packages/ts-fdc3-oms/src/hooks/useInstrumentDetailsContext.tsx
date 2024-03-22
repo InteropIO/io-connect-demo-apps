@@ -194,7 +194,7 @@ const useInstrumentDetailsContext = (): UseInstrumentDetailsContext => {
 
             const onChannel = await isOnChannel()
             if (onChannel) {
-                return window.fdc3?.broadcast(data)
+                return window.fdc3.broadcast(data)
             }
 
             const inWsp = await isInWorkspace()
