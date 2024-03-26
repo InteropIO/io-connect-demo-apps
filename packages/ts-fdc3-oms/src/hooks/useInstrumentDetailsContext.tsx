@@ -1,3 +1,4 @@
+import '@interopio/fdc3'
 import { GlueContext } from '@glue42/react-hooks'
 import { Glue42Workspaces } from '@glue42/workspaces-api'
 import { useCallback, useContext, useEffect, useState } from 'react'
@@ -128,9 +129,19 @@ const useInstrumentDetailsContext = (): UseInstrumentDetailsContext => {
     }, [setFdc3Instrument, isInWorkspace, isOnChannel, glue])
 
     useEffect(() => {
-        async function subscribeToContextsUpdates() {
+        async function subscribeToFdc3Updates() {
             const listener = await setSymbolFromSource()
 
+            return () => {
+                if (listener) listener.unsubscribe()
+            }
+        }
+
+        subscribeToFdc3Updates()
+    }, [setSymbolFromSource])
+
+    useEffect(() => {
+        async function subscribeToContextsUpdates() {
             const subscriptionPromise = glue.contexts.subscribe(
                 INSTRUMENT_DETAILS,
                 () => {
@@ -143,8 +154,6 @@ const useInstrumentDetailsContext = (): UseInstrumentDetailsContext => {
             })
 
             return () => {
-                if (listener) listener.unsubscribe()
-
                 subscriptionPromise.then(
                     (unsubscribe) => unsubscribe(),
                     console.error
@@ -175,7 +184,6 @@ const useInstrumentDetailsContext = (): UseInstrumentDetailsContext => {
 
     useEffect(
         function subscribeOnContextSourceChange() {
-
             glue.channels.onChanged(() => {
                 setSymbolFromSource()
             })

@@ -121,7 +121,7 @@ type IntentsApi = {
     raise: (
         intent: string,
         context: Context,
-        target?: 'startNew' | 'reuse' | { app?: string; instance?: string }
+        target?: 'startNew' | 'reuse' | { appId?: string; instance?: string }
     ) => Promise<void>
 }
 
@@ -231,10 +231,12 @@ export const useAddIntentListenerInstrument = (
             handler && handler({ ticker, BBG_EXCHANGE })
         }
 
-        const listener = intentsApi?.addIntentListener(
-            { intent: intentName, contextTypes: ['fdc3.instrument'] },
-            contextHandler
-        )
+        const listener = window.fdc3
+            ? intentsApi?.addIntentListener(intentName, contextHandler)
+            : intentsApi?.addIntentListener(
+                  { intent: intentName, contextTypes: ['fdc3.instrument'] },
+                  contextHandler
+              )
 
         return () => {
             if (listener) {
@@ -296,10 +298,15 @@ export const useAddTradeHistoryIntentListener = (
             handler && handler(contextData)
         }
 
-        const listener = intentsApi?.addIntentListener(
-            intentName,
-            contextHandler
-        )
+        const listener = window.fdc3
+            ? intentsApi?.addIntentListener(intentName, contextHandler)
+            : intentsApi?.addIntentListener(
+                  {
+                      intent: intentName,
+                      contextTypes: ['fdc3.order'],
+                  },
+                  contextHandler
+              )
 
         return () => {
             if (listener) {

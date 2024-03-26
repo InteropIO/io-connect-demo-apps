@@ -1,4 +1,4 @@
-import { Fdc3Instrument } from './fdc3-instrument'
+import { Fdc3Instrument, Fdc3InstrumentId } from './fdc3-instrument'
 
 export interface InstrumentIdInternal {
     ticker: string
@@ -62,6 +62,7 @@ export interface OrderFilter {
 
 export interface OrderFilterEx extends OrderFilter {
     switchView?: boolean
+    id?: Fdc3InstrumentId
 }
 
 export interface TradePosition {
