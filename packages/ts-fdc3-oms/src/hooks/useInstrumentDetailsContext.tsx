@@ -27,11 +27,13 @@ const useInstrumentDetailsContext = (): UseInstrumentDetailsContext => {
         Glue42Workspaces.Workspace | undefined
     >()
 
-    const isOnChannel = useCallback(
+    const isOnFDC3CChannel = useCallback(
         async () =>
             window.fdc3 && (await window.fdc3.getCurrentChannel()) != null,
         [window.fdc3]
     )
+
+    const isOnChannel = useCallback(() => glue.channels.my() != null, [glue])
 
     const isInWorkspace = useCallback(
         () =>
@@ -61,9 +63,13 @@ const useInstrumentDetailsContext = (): UseInstrumentDetailsContext => {
             }
         }
 
-        // Channel's context has top precedence.
+        // FDC3's context has top precedence.
+        const onFDC3Channel = await isOnFDC3CChannel()
+
+        // Channel's context has second precedence.
         const onChannel = await isOnChannel()
-        if (onChannel) {
+
+        if (onFDC3Channel) {
             console.log(
                 '[useInstrumentDetailsContext] getting instrument details from channel ctx...'
             )
@@ -86,25 +92,27 @@ const useInstrumentDetailsContext = (): UseInstrumentDetailsContext => {
                 .catch(console.error)
         }
 
-        // Workspace context has less precedence than channels.
-        const inWsp = await isInWorkspace()
-        const myWsp = await glue.workspaces?.getMyWorkspace().catch(() => null)
-        if (inWsp && myWsp != null) {
+        if (onChannel) {
+            // Workspace context has less precedence than channels.
+            const inWsp = await isInWorkspace()
+            const myWsp = await glue.workspaces?.getMyWorkspace().catch(() => null)
+            if (inWsp && myWsp != null) {
+                console.log(
+                    '[useInstrumentDetailsContext] getting instrument details from workspace ctx...'
+                )
+
+                return myWsp.getContext().then(setCtxSymbol).catch(console.error)
+            }
+
+            // Global context has least precedence.
             console.log(
-                '[useInstrumentDetailsContext] getting instrument details from workspace ctx...'
+                '[useInstrumentDetailsContext] getting instrument details global ctx...'
             )
-
-            return myWsp.getContext().then(setCtxSymbol).catch(console.error)
+            glue.contexts
+                .get(INSTRUMENT_DETAILS)
+                .then(setCtxSymbol)
+                .catch(console.error)
         }
-
-        // Global context has least precedence.
-        console.log(
-            '[useInstrumentDetailsContext] getting instrument details global ctx...'
-        )
-        glue.contexts
-            .get(INSTRUMENT_DETAILS)
-            .then(setCtxSymbol)
-            .catch(console.error)
     }, [setFdc3Instrument, isInWorkspace, isOnChannel, glue])
 
     useEffect(() => {
