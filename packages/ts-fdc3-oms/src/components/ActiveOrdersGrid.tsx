@@ -338,10 +338,14 @@ const ActiveOrdersGrid = (props: OrderGridParam): JSX.Element => {
             const order = event.data
 
             glue?.interop
-                .invoke(METHODNAME_PRETRADE_BMLL, {
-                    ticker: formatInstrumentFromId(order.instrument),
-                    instruments: [formatInstrumentFromId(order.instrument)],
-                }, 'all')
+                .invoke(
+                    METHODNAME_PRETRADE_BMLL,
+                    {
+                        ticker: formatInstrumentFromId(order.instrument),
+                        instruments: [formatInstrumentFromId(order.instrument)],
+                    },
+                    'all'
+                )
                 .then((/*result*/) => {
                     console.log('BMLL Vantage left click sync successful')
                 })

@@ -15,23 +15,25 @@ const gPublishInstrument = async (
     const fdc3Instrument = getFdc3Instrument(instrument)
     if (!fdc3Instrument) return
 
-    const contextData = { instrument: fdc3Instrument }
+    if (window.fdc3) {
+        return await window.fdc3.broadcast(fdc3Instrument).catch(console.error)
+    }
 
     if (await condMan.evaluateCondition('sync.instrument.out.channel')) {
-        glue.channels
-            ?.publish(contextData)
-            .catch(console.error)
+        return glue.channels?.publish(fdc3Instrument).catch(console.error)
     }
 
     if (await condMan.evaluateCondition('sync.instrument.out.wscontext')) {
         return glue.workspaces
             ?.getMyWorkspace()
-            .then((wsp) => wsp.updateContext(contextData))
+            .then((wsp) => wsp.updateContext(fdc3Instrument))
             .catch(console.error)
     }
 
     if (await condMan.evaluateCondition('sync.instrument.out.globalcontext')) {
-        return glue.contexts?.update(OMS_GLOBAL_DATA_CONTEXT_NAME, contextData).catch(console.error)
+        return glue.contexts
+            ?.update(OMS_GLOBAL_DATA_CONTEXT_NAME, fdc3Instrument)
+            .catch(console.error)
     }
 }
 

@@ -8,7 +8,7 @@ export default function useViewInstrument() {
     return useCallback(async (instrument: string | InstrumentIdInternal) => {
         const fdc3Instrument = getFdc3Instrument(instrument)
 
-        if ((window as any).fdc3) {
+        if (window.fdc3 && fdc3Instrument) {
             raiseIntent(ViewInstrumentIntent, {
                 type: fdc3Instrument?.type || '',
                 data: fdc3Instrument,

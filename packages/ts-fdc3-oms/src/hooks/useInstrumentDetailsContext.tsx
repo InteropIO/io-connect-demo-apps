@@ -1,3 +1,4 @@
+import '@interopio/fdc3'
 import { GlueContext } from '@glue42/react-hooks'
 import { Glue42Workspaces } from '@glue42/workspaces-api'
 import { useCallback, useContext, useEffect, useState } from 'react'
@@ -65,7 +66,7 @@ const useInstrumentDetailsContext = (): UseInstrumentDetailsContext => {
         const onChannel = await isOnChannel()
         if (onChannel) {
             console.log(
-                '[useInstrumentDetailsContext] getting instrument details from channel ctx...'
+                '[useInstrumentDetailsContext] getting instrument details from FDC3 ctx...'
             )
 
             return await window.fdc3
@@ -108,9 +109,19 @@ const useInstrumentDetailsContext = (): UseInstrumentDetailsContext => {
     }, [setFdc3Instrument, isInWorkspace, isOnChannel, glue])
 
     useEffect(() => {
-        async function subscribeToContextsUpdates() {
+        async function subscribeToFdc3Updates() {
             const listener = await setSymbolFromSource()
 
+            return () => {
+                if (listener) listener.unsubscribe()
+            }
+        }
+
+        subscribeToFdc3Updates()
+    }, [setSymbolFromSource, glue])
+
+    useEffect(() => {
+        async function subscribeToContextsUpdates() {
             const subscriptionPromise = glue.contexts.subscribe(
                 INSTRUMENT_DETAILS,
                 () => {
@@ -119,8 +130,6 @@ const useInstrumentDetailsContext = (): UseInstrumentDetailsContext => {
             )
 
             return () => {
-                if (listener) listener.unsubscribe()
-
                 subscriptionPromise.then(
                     (unsubscribe) => unsubscribe(),
                     console.error
@@ -194,7 +203,7 @@ const useInstrumentDetailsContext = (): UseInstrumentDetailsContext => {
 
             const onChannel = await isOnChannel()
             if (onChannel) {
-                return window.fdc3.broadcast(data)
+                return window.fdc3.broadcast(data).catch(console.error)
             }
 
             const inWsp = await isInWorkspace()

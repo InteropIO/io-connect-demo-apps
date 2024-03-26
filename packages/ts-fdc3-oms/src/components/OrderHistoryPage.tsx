@@ -17,8 +17,8 @@ export default function OrderHistoryPage(): JSX.Element {
         let securityId
         if (typeof(context.securityId) === 'string') {
             securityId = getInstrumentIdFromString(context.securityId)
-        } else if (context.instrument) {
-            securityId = getInstrumentIdFromString(context.instrument.id?.RIC)
+        } else if (context.id) {
+            securityId = getInstrumentIdFromString(context.id?.RIC)
         } else {
             securityId = context.securityId || { ticker: '', bbgExchange: '' }
         }
