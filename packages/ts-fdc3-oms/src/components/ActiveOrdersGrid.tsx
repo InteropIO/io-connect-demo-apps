@@ -94,7 +94,8 @@ const parseUrl = (url: string) => {
     result['urlHash'] = hash
     return result
 }
-const getOrderRowId = (params: GetRowIdParams<OrderInfo>) => params.data.orderId.toString()
+const getOrderRowId = (params: GetRowIdParams<OrderInfo>) =>
+    params.data.orderId.toString()
 const getOrderSliceRowNodeId = (data: OrderInfo) => data.sliceId?.toString()
 const getRowStyle = (params: RowClassParams): RowStyle => {
     const style: React.CSSProperties = {}
@@ -293,20 +294,20 @@ const ActiveOrdersGrid = (props: OrderGridParam): JSX.Element => {
                           notes: 'low touch',
                       }
                     : { type: 'fdc3.order' }
-                glue?.intents.raise({
-                    intent: 'NewOrder',
-                    context: {
-                        type: 'fdc3.order',
-                        data: order,
-                    },
-                    //...(myInstance && {target:{instance: myInstance}})
-                    target: 'reuse',
-                })
+
+                if (window.fdc3) {
+                    window.fdc3
+                        .raiseIntent('NewOrder', {
+                            type: 'fdc3.order',
+                            order,
+                        })
+                        .catch(console.error)
+                }
             } else {
                 props.setNewOrderView(true)
             }
         },
-        [props]
+        [props, window.fdc3]
     )
 
     const onRowDataUpdated = useCallback(
@@ -376,16 +377,22 @@ const ActiveOrdersGrid = (props: OrderGridParam): JSX.Element => {
                 createTime: event.data.dateCreated,
             }
 
-            glue?.intents
-                .raise({
-                    intent: INTENT_VIEW_ORDER_TRADE_HISTORY,
-                    context: {
-                        type: ctx.type,
-                        data: ctx,
-                    },
-                    target: 'reuse',
-                })
-                .catch(console.error)
+
+            if (window.fdc3) {
+                window.fdc3
+                    .raiseIntent(
+                        INTENT_VIEW_ORDER_TRADE_HISTORY,
+                        {
+                            type: ctx.type,
+                            order: {
+                                id: event.data.orderId,
+                                createTime: event.data.dateCreated,
+                            },
+                        },
+                        { appId: 'fdc3-oms-trade-history' }
+                    )
+                    .catch(console.error)
+            }
 
             const client = clients?.find(
                 (c: ClientInfo) => c.clientId === clientId
@@ -411,7 +418,7 @@ const ActiveOrdersGrid = (props: OrderGridParam): JSX.Element => {
                     .catch(console.error)
             }
         },
-        [clients, publishInstrument, syncInstrument]
+        [window.fdc3, clients, publishInstrument, syncInstrument]
     )
 
     const getContextMenuItems = useCallback(
@@ -439,17 +446,21 @@ const ActiveOrdersGrid = (props: OrderGridParam): JSX.Element => {
                 {
                     name: 'View Executions',
                     action: function () {
-                        glue?.intents.raise({
-                            intent: INTENT_VIEW_ORDER_TRADE_HISTORY,
-                            context: {
-                                type: 'fdc3.order',
-                                data: {
-                                    type: 'fdc3.order',
-                                    id: firstOrder.orderId,
-                                    createTime: firstOrder.dateCreated,
-                                },
-                            },
-                        })
+                        if (window.fdc3) {
+                            window.fdc3
+                                .raiseIntent(
+                                    INTENT_VIEW_ORDER_TRADE_HISTORY,
+                                    {
+                                        type: 'fdc3.order',
+                                        order: {
+                                            id: firstOrder.orderId,
+                                            createTime: firstOrder.dateCreated,
+                                        },
+                                    },
+                                    { appId: 'fdc3-oms-trade-history' }
+                                )
+                                .catch(console.error)
+                        }
                     },
                 },
                 {
@@ -474,7 +485,7 @@ const ActiveOrdersGrid = (props: OrderGridParam): JSX.Element => {
             ]
             return result
         },
-        []
+        [window.fdc3]
     )
 
     let pageHeader = undefined

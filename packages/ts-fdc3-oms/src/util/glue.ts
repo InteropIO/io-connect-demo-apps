@@ -247,7 +247,7 @@ export const useAddIntentListenerInstrument = (
 }
 
 export const useAddNewOrderIntentListener = (
-    handler: (order: Fdc3Order) => void
+    handler: ({ order }: { order: Fdc3Order }) => void
 ): void => {
     const intentsApi = useIntents()
 
@@ -280,7 +280,7 @@ export const useAddNewOrderIntentListener = (
 
 export const useAddTradeHistoryIntentListener = (
     intentName: string,
-    handler: (order: Fdc3Order) => void
+    handler: ({ order }: { order: Fdc3Order }) => void
 ): void => {
     const intentsApi = useIntents()
     useEffect(() => {

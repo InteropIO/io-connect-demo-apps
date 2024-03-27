@@ -15,10 +15,13 @@ export default function TradeHistoryPage(): JSX.Element {
     const [intentOrder, setIntentOrder] = useState<Fdc3Order>()
     const [intentInstrument, setIntentInstrument] = useState<Fdc3Instrument>()
 
-    const handleViewTradeHistoryForOrder = useCallback((order: Fdc3Order) => {
-        console.log('viewTradeHistoryForOrder:', order)
-        setIntentOrder(order)
-    }, [])
+    const handleViewTradeHistoryForOrder = useCallback(
+        ({ order }: { order: Fdc3Order }) => {
+            console.log('viewTradeHistoryForOrder:', order)
+            setIntentOrder(order)
+        },
+        []
+    )
     useAddTradeHistoryIntentListener(
         INTENT_VIEW_ORDER_TRADE_HISTORY,
         handleViewTradeHistoryForOrder
