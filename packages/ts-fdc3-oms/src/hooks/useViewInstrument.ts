@@ -12,7 +12,7 @@ export default function useViewInstrument() {
             raiseIntent(ViewInstrumentIntent, {
                 type: fdc3Instrument?.type || '',
                 data: fdc3Instrument,
-            }).catch(console.log)
+            }).catch(console.error)
         }
     }, [])
 }

@@ -33,7 +33,7 @@ import {
     defaultColumnDef,
 } from '../constants/grids'
 import { Fdc3Order } from '../models/fdc3-order'
-import { isGlue42Enterprise } from '../util/glue'
+import { isGlue42Enterprise, useIntents } from '../util/glue'
 import OrderFilters from './OrderFilters'
 import { HASH_ORDERS, HASH_ORDER_HISTORY } from '../constants/pageHashes'
 import { pushToBbgWorksheet } from '../util/bbg'
@@ -94,7 +94,8 @@ const parseUrl = (url: string) => {
     result['urlHash'] = hash
     return result
 }
-const getOrderRowId = (params: GetRowIdParams<OrderInfo>) => params.data.orderId.toString()
+const getOrderRowId = (params: GetRowIdParams<OrderInfo>) =>
+    params.data.orderId.toString()
 const getOrderSliceRowNodeId = (data: OrderInfo) => data.sliceId?.toString()
 const getRowStyle = (params: RowClassParams): RowStyle => {
     const style: React.CSSProperties = {}
@@ -154,6 +155,7 @@ const ActiveOrdersGrid = (props: OrderGridParam): JSX.Element => {
     const orderSides = useOrderSides()
     const orderTypes = useOrderTypes()
     const orderValidity = useOrderValidity()
+    const intentsApi = useIntents()
     const { syncInstrument } = useMorningStarSync()
     const { publishInstrument } = useEntityPublisher(glue)
     const viewInstrument = useViewInstrument()
@@ -293,20 +295,16 @@ const ActiveOrdersGrid = (props: OrderGridParam): JSX.Element => {
                           notes: 'low touch',
                       }
                     : { type: 'fdc3.order' }
-                glue?.intents.raise({
-                    intent: 'NewOrder',
-                    context: {
-                        type: 'fdc3.order',
-                        data: order,
-                    },
-                    //...(myInstance && {target:{instance: myInstance}})
-                    target: 'reuse',
+
+                intentsApi?.raiseIntent('NewOrder', {
+                    type: 'fdc3.order',
+                    order,
                 })
             } else {
                 props.setNewOrderView(true)
             }
         },
-        [props]
+        [props, intentsApi]
     )
 
     const onRowDataUpdated = useCallback(
@@ -376,16 +374,17 @@ const ActiveOrdersGrid = (props: OrderGridParam): JSX.Element => {
                 createTime: event.data.dateCreated,
             }
 
-            glue?.intents
-                .raise({
-                    intent: INTENT_VIEW_ORDER_TRADE_HISTORY,
-                    context: {
-                        type: ctx.type,
-                        data: ctx,
+            intentsApi?.raiseIntent(
+                INTENT_VIEW_ORDER_TRADE_HISTORY,
+                {
+                    type: ctx.type,
+                    order: {
+                        id: event.data.orderId,
+                        createTime: event.data.dateCreated,
                     },
-                    target: 'reuse',
-                })
-                .catch(console.error)
+                },
+                { appId: 'fdc3-oms-trade-history' }
+            )
 
             const client = clients?.find(
                 (c: ClientInfo) => c.clientId === clientId
@@ -411,7 +410,7 @@ const ActiveOrdersGrid = (props: OrderGridParam): JSX.Element => {
                     .catch(console.error)
             }
         },
-        [clients, publishInstrument, syncInstrument]
+        [intentsApi, clients, publishInstrument, syncInstrument]
     )
 
     const getContextMenuItems = useCallback(
@@ -439,17 +438,17 @@ const ActiveOrdersGrid = (props: OrderGridParam): JSX.Element => {
                 {
                     name: 'View Executions',
                     action: function () {
-                        glue?.intents.raise({
-                            intent: INTENT_VIEW_ORDER_TRADE_HISTORY,
-                            context: {
+                        intentsApi?.raiseIntent(
+                            INTENT_VIEW_ORDER_TRADE_HISTORY,
+                            {
                                 type: 'fdc3.order',
-                                data: {
-                                    type: 'fdc3.order',
+                                order: {
                                     id: firstOrder.orderId,
                                     createTime: firstOrder.dateCreated,
                                 },
                             },
-                        })
+                            { appId: 'fdc3-oms-trade-history' }
+                        )
                     },
                 },
                 {
@@ -474,7 +473,7 @@ const ActiveOrdersGrid = (props: OrderGridParam): JSX.Element => {
             ]
             return result
         },
-        []
+        [intentsApi]
     )
 
     let pageHeader = undefined

@@ -171,11 +171,13 @@ const Portfolio = (): JSX.Element => {
                 intent: 'NewOrder',
                 context: {
                     data: {
-                        type: 'fdc3.order',
-                        side: side,
-                        instrument: instrument,
-                        quantity: quantity,
-                        notes: selectedFund?.name,
+                        order: {
+                            type: 'fdc3.order',
+                            side: side,
+                            instrument: instrument,
+                            quantity: quantity,
+                            notes: selectedFund?.name,
+                        },
                     },
                 },
                 target: 'reuse',
