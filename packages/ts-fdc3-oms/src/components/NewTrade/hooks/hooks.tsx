@@ -98,29 +98,36 @@ export const useAddNewTradeIntentListener = (handler: (trade: any) => void) => {
     const intentsApi = useIntents()
 
     useEffect(() => {
-        const intent = 'NewTrade'
+        const subscribeToFdc3Updates = async () => {
+            const intent = 'NewTrade'
 
-        function contextHandler(contextData: any) {
-            console.log('context', contextData)
+            function contextHandler(contextData: any) {
+                console.log('context', contextData)
 
-            if (contextData == null || contextData.type !== FDC3_TRADE) {
-                console.log(
-                    `NewOrder intent context's "type" must be ${FDC3_TRADE}. Received `,
-                    contextData?.type
-                )
-                return
+                if (contextData == null || contextData.type !== FDC3_TRADE) {
+                    console.log(
+                        `NewOrder intent context's "type" must be ${FDC3_TRADE}. Received `,
+                        contextData?.type
+                    )
+                    return
+                }
+
+                handler && handler(contextData)
             }
 
-            handler && handler(contextData)
-        }
+            const listener = await intentsApi?.addIntentListener(
+                intent,
+                contextHandler
+            )
 
-        const listener = intentsApi?.addIntentListener(intent, contextHandler)
-
-        return () => {
-            if (listener) {
-                listener.unsubscribe()
+            return () => {
+                if (listener) {
+                    listener.unsubscribe()
+                }
             }
         }
+
+        subscribeToFdc3Updates()
     }, [intentsApi, handler])
 }
 

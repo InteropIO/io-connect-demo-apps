@@ -1,4 +1,10 @@
 import { useState, useEffect, useContext } from 'react'
+import {
+    AppIdentifier,
+    Context,
+    IntentHandler,
+    Listener,
+} from '@interopio/fdc3'
 import { useGlue } from '@glue42/react-hooks'
 import { callSafe, formatInstrument, setTheme } from './util'
 import {
@@ -99,78 +105,38 @@ export const attachGlueToGlobalScope = (glue: unknown): Promise<void> => {
     return Promise.resolve()
 }
 
-interface Context {
-    type: string
-    [key: string]: any
-}
-
-interface IntentContext {
-    intent: string
-    contextTypes?: string[]
-    displayName?: string
-    icon?: string
-    description?: string
-    resultType?: string
-}
-
 type IntentsApi = {
     addIntentListener: (
-        intent: string | IntentContext,
-        handler: CallableFunction
-    ) => { unsubscribe: () => void }
-    raise: (
         intent: string,
-        context: Context,
-        target?: 'startNew' | 'reuse' | { appId?: string; instance?: string }
-    ) => Promise<void>
+        handler: IntentHandler
+    ) => Promise<Listener>
+    raiseIntent: (intent: string, context: Context, app?: AppIdentifier) => void
 }
 
 export const useIntents = (): IntentsApi | undefined => {
     const [intentsApi, setIntentsApi] = useState<IntentsApi>()
 
-    const windowAny = window as any
-    useGlue((glue) => {
-        const glueApi: IntentsApi = {
-            addIntentListener: (intent, handler) => {
-                return glue.intents.addIntentListener(intent, (context) => {
-                    handler(context?.data)
-                })
-            },
-            raise: async (intent: string, context: Context, target?: any) => {
-                const ctx = context ?? {}
-                const request = {
-                    intent,
-                    context: {
-                        type: ctx.type,
-                        data: ctx,
-                    },
-                    target,
-                }
-
-                await glue.intents.raise(request)
-            },
-        }
-
-        if (windowAny.fdc3) {
+    useEffect(() => {
+        if (window.fdc3) {
             console.log(
                 'FDC3 is ready. Using fdc3 library as intents provider.'
             )
             setIntentsApi({
-                addIntentListener: windowAny.fdc3.addIntentListener.bind(
-                    windowAny.fdc3
+                addIntentListener: window.fdc3.addIntentListener.bind(
+                    window.fdc3
                 ),
-                raise: async (
+                raiseIntent: async (
                     intent: string,
                     context: Context,
-                    target?: any
+                    app?: AppIdentifier
                 ) => {
-                    console.log('raising intent...')
-                    console.log(intent, '/', context, '/', target)
+                    console.log('raising FDC3 intent...')
+                    console.log(intent, '/', context, '/', app)
 
-                    const resolution = await windowAny.fdc3.raiseIntent(
+                    const resolution = await window.fdc3.raiseIntent(
                         intent,
                         context,
-                        target
+                        app
                     )
                     try {
                         await resolution.getResult()
@@ -181,11 +147,6 @@ export const useIntents = (): IntentsApi | undefined => {
                     }
                 },
             })
-        } else {
-            console.log(
-                'FDC3 library not injected. Using glue library as intents provider.'
-            )
-            setIntentsApi(glueApi)
         }
     }, [])
 
@@ -205,44 +166,46 @@ export const useAddIntentListenerInstrument = (
     const intentsApi = useIntents()
 
     useEffect(() => {
-        function contextHandler(context: Fdc3Instrument) {
-            if (
-                context == null ||
-                context.type !== FDC3_INSTRUMENT ||
-                !context.id
-            ) {
-                console.log(
-                    `${intentName} intent context's "type" must be ${FDC3_INSTRUMENT} and it should have id. Received `,
-                    context?.type
-                )
-                return
+        const subscribeToFdc3Updates = async () => {
+            function contextHandler(context: Context) {
+                if (
+                    context == null ||
+                    context.type !== FDC3_INSTRUMENT ||
+                    !context.id
+                ) {
+                    console.log(
+                        `${intentName} intent context's "type" must be ${FDC3_INSTRUMENT} and it should have id. Received `,
+                        context?.type
+                    )
+                    return
+                }
+
+                const ric = context.id?.RIC?.split(SPLIT_INSTRUMENT_RIC_REGEX)
+
+                let ticker = context.id.ticker || ''
+                let BBG_EXCHANGE = 'LN'
+
+                if (ric && ric.length > 1) {
+                    ticker = ric[0]
+                    BBG_EXCHANGE = ric[1]
+                }
+
+                handler && handler({ ticker, BBG_EXCHANGE })
             }
 
-            const ric = context.id?.RIC?.split(SPLIT_INSTRUMENT_RIC_REGEX)
+            const listener = await intentsApi?.addIntentListener(
+                intentName,
+                contextHandler
+            )
 
-            let ticker = context.id.ticker || ''
-            let BBG_EXCHANGE = 'LN'
-
-            if (ric && ric.length > 1) {
-                ticker = ric[0]
-                BBG_EXCHANGE = ric[1]
+            return () => {
+                if (listener) {
+                    listener.unsubscribe()
+                }
             }
-
-            handler && handler({ ticker, BBG_EXCHANGE })
         }
 
-        const listener = window.fdc3
-            ? intentsApi?.addIntentListener(intentName, contextHandler)
-            : intentsApi?.addIntentListener(
-                  { intent: intentName, contextTypes: ['fdc3.instrument'] },
-                  contextHandler
-              )
-
-        return () => {
-            if (listener) {
-                listener.unsubscribe()
-            }
-        }
+        subscribeToFdc3Updates()
     }, [intentsApi, handler])
 }
 
@@ -252,29 +215,36 @@ export const useAddNewOrderIntentListener = (
     const intentsApi = useIntents()
 
     useEffect(() => {
-        const intent = 'NewOrder'
+        async function subscribeToFdc3Updates() {
+            const intent = 'NewOrder'
 
-        function contextHandler(contextData: any) {
-            console.log('context', contextData)
+            function contextHandler(contextData: any) {
+                console.log('context', contextData)
 
-            if (contextData == null || contextData.type !== FDC3_ORDER) {
-                console.log(
-                    `NewOrder intent context's "type" must be ${FDC3_ORDER}. Received `,
-                    contextData?.type
-                )
-                return
+                if (contextData == null || contextData.type !== FDC3_ORDER) {
+                    console.log(
+                        `NewOrder intent context's "type" must be ${FDC3_ORDER}. Received `,
+                        contextData?.type
+                    )
+                    return
+                }
+
+                handler && handler(contextData)
             }
 
-            handler && handler(contextData)
-        }
+            const listener = await intentsApi?.addIntentListener(
+                intent,
+                contextHandler
+            )
 
-        const listener = intentsApi?.addIntentListener(intent, contextHandler)
-
-        return () => {
-            if (listener) {
-                listener.unsubscribe()
+            return () => {
+                if (listener) {
+                    listener.unsubscribe()
+                }
             }
         }
+
+        subscribeToFdc3Updates()
     }, [intentsApi, handler])
 }
 
@@ -284,35 +254,32 @@ export const useAddTradeHistoryIntentListener = (
 ): void => {
     const intentsApi = useIntents()
     useEffect(() => {
-        function contextHandler(contextData: any) {
-            // eslint-disable-next-line no-debugger
-            // debugger;
-            if (contextData == null || contextData.type !== FDC3_ORDER) {
-                console.log(
-                    `${intentName} intent context's "type" must be ${FDC3_ORDER}. Received `,
-                    contextData
-                )
-                return
+        async function subscribeToFdc3Updates(api: any) {
+            function contextHandler(contextData: any) {
+                if (contextData == null || contextData.type !== FDC3_ORDER) {
+                    console.log(
+                        `${intentName} intent context's "type" must be ${FDC3_ORDER}. Received `,
+                        contextData
+                    )
+                    return
+                }
+
+                handler && handler(contextData)
             }
 
-            handler && handler(contextData)
-        }
+            const listener = await api?.addIntentListener(
+                intentName,
+                contextHandler
+            )
 
-        const listener = window.fdc3
-            ? intentsApi?.addIntentListener(intentName, contextHandler)
-            : intentsApi?.addIntentListener(
-                  {
-                      intent: intentName,
-                      contextTypes: ['fdc3.order'],
-                  },
-                  contextHandler
-              )
-
-        return () => {
-            if (listener) {
-                listener.unsubscribe()
+            return () => {
+                if (listener) {
+                    listener.unsubscribe()
+                }
             }
         }
+
+        subscribeToFdc3Updates(intentsApi)
     }, [intentsApi, handler])
 }
 
@@ -322,11 +289,22 @@ export const useAddIntentListener = (
 ): void => {
     const intentsApi = useIntents()
     useEffect(() => {
-        const listener = intentsApi?.addIntentListener(intentName, handler)
-        return () => {
-            console.log(`unsubscribing listener for ${intentName}`, listener)
-            listener?.unsubscribe()
+        async function subscribeToFdc3Updates() {
+            const listener = await intentsApi?.addIntentListener(
+                intentName,
+                handler
+            )
+
+            return () => {
+                console.log(
+                    `unsubscribing listener for ${intentName}`,
+                    listener
+                )
+                listener?.unsubscribe()
+            }
         }
+
+        subscribeToFdc3Updates()
     }, [intentsApi, intentName, handler])
 }
 
