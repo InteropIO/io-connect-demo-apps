@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect, useMemo } from 'react'
+import { useState, useContext, useEffect, useMemo, useCallback } from 'react'
 import { GlueContext } from '@glue42/react-hooks'
 import { AgGridReact } from 'ag-grid-react'
 import { ExcelExportParams, GetContextMenuItemsParams } from 'ag-grid-community'
@@ -161,29 +161,29 @@ const Portfolio = (): JSX.Element => {
         }
     }
 
-    const raiseOrderIntent = (
+    const raiseOrderIntent = useCallback((
         side: '1' | '2',
         instrument: Fdc3Instrument,
         quantity?: number
     ) => {
-        glue.intents
-            .raise({
-                intent: 'NewOrder',
-                context: {
-                    data: {
+        if (window.fdc3) {
+            window.fdc3
+                .raiseIntent(
+                    'NewOrder', 
+                    {
+                        type: 'fdc3.order',
                         order: {
                             type: 'fdc3.order',
                             side: side,
                             instrument: instrument,
                             quantity: quantity,
-                            notes: selectedFund?.name,
-                        },
+                            notes: selectedFund?.name
+                        }
                     },
-                },
-                target: 'reuse',
-            })
+                    { appId: 'fdc3-oms-new-order' })
             .catch(console.error)
-    }
+        }
+    }, [window.fdc3])
 
     const onRowClicked = (row: { data: PortfolioInstrumentInfo }) => {
         if (row.data) {

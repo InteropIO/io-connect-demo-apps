@@ -27,12 +27,14 @@ interface MethodRegistrationItem {
 
 class AcmeService {
     private glue: any
+    private fdc3: any
     private methods: MethodRegistrationItem[]
     private clientSyncedId: string
     // private didReplay: boolean
 
-    constructor(glue: any) {
+    constructor(glue: any, fdc3: any) {
         this.glue = glue
+        this.fdc3 = fdc3
         this.methods = []
         this.clientSyncedId = ''
         // this.didReplay = false
@@ -99,12 +101,10 @@ class AcmeService {
 
                 if (internalClient) {
                     this.raiseViewOrderHistory({
-                        data: {
-                            clientId: internalClient.clientId,
-                            securityId: {
-                                ticker: '',
-                                bbgExchange: '',
-                            },
+                        clientId: internalClient.clientId,
+                        securityId: {
+                            ticker: '',
+                            bbgExchange: '',
                         },
                     })
                 }
@@ -162,13 +162,11 @@ class AcmeService {
 
                 if (ticker && typeof ticker === 'string') {
                     this.raiseViewOrderHistory({
-                        data: {
-                            securityId: {
-                                ticker: ticker,
-                                bbgExchange: exchange,
-                            },
-                            clientId: '',
+                        securityId: {
+                            ticker: ticker,
+                            bbgExchange: exchange,
                         },
+                        clientId: '',
                     })
                 }
             }
@@ -304,24 +302,22 @@ class AcmeService {
             quantity: args.quantity,
         }
 
-        this.glue?.intents.raise({
-            intent: 'NewOrder',
-            context: {
+        this.fdc3?.raiseIntent(
+            'NewOrder', 
+            {
                 type: 'fdc3.order',
-                data: order,
+                order      
             },
-            target: 'reuse',
-        })
+            { appId: 'fdc3-oms-new-order' }
+        )
     }
 
     private raiseViewOrderHistory = async (context: any): Promise<void> => {
         if (await this.shouldRaiseIntent()) {
-            this.glue.intents
-                .raise({
-                    intent: ViewOrderHistoryIntent,
-                    context,
-                    target: 'reuse',
-                })
+            this.fdc3?.raiseIntent(
+                ViewOrderHistoryIntent, 
+                context,
+                { appId: 'fdc3-oms-order-history' })
                 .catch((error: Error) => {
                     console.error(
                         'ViewOrderHistory intent failed. Error: ',
@@ -332,17 +328,8 @@ class AcmeService {
     }
 
     private shouldRaiseIntent = async (): Promise<any> => {
-        const intensts = await this.glue.intents.all()
-
-        const intent = intensts?.find(
-            (i: any) => i.name === ViewOrderHistoryIntent
-        )
-
-        const handler = intent?.handlers?.find(
-            (h: any) => h.type === 'instance'
-        )
-
-        return handler && handler.applicationName === 'acme-oms-order-history'
+        const intents = await this.fdc3.findIntent(ViewOrderHistoryIntent)
+        return !!intents.apps.find((i: any) => i.name === 'fdc3-oms-order-history')
     }
 
     private getSfId = ({ ids }: any) => {
