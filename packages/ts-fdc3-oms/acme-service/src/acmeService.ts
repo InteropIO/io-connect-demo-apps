@@ -329,7 +329,6 @@ class AcmeService {
 
     private shouldRaiseIntent = async (): Promise<any> => {
         const intents = await this.fdc3.findIntent(ViewOrderHistoryIntent)
-        
         return !!intents.apps.find((i: any) => i.name === 'fdc3-oms-order-history')
     }
 
