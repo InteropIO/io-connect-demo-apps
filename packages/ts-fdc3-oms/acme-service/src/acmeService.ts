@@ -106,7 +106,7 @@ class AcmeService {
                             ticker: '',
                             bbgExchange: '',
                         },
-                                            })
+                    })
                 }
             },
         })
