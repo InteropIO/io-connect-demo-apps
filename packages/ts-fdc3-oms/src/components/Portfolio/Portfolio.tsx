@@ -168,16 +168,19 @@ const Portfolio = (): JSX.Element => {
     ) => {
         if (window.fdc3) {
             window.fdc3
-                .raiseIntent('NewOrder', {
-                    type: 'fdc3.order',
-                    order: {
+                .raiseIntent(
+                    'NewOrder', 
+                    {
                         type: 'fdc3.order',
-                        side: side,
-                        instrument: instrument,
-                        quantity: quantity,
-                        notes: selectedFund?.name
-                    }
-                })
+                        order: {
+                            type: 'fdc3.order',
+                            side: side,
+                            instrument: instrument,
+                            quantity: quantity,
+                            notes: selectedFund?.name
+                        }
+                    },
+                    { appId: 'fdc3-oms-new-order' })
             .catch(console.error)
         }
     }, [window.fdc3])

@@ -66,7 +66,9 @@ var AcmeService = /*#__PURE__*/function () {
                   _context.next = 4;
                   break;
                 }
-                (_this$fdc = _this.fdc3) === null || _this$fdc === void 0 ? void 0 : _this$fdc.raiseIntent(_constants_constants__WEBPACK_IMPORTED_MODULE_5__.ViewOrderHistoryIntent, context).catch(function (error) {
+                (_this$fdc = _this.fdc3) === null || _this$fdc === void 0 ? void 0 : _this$fdc.raiseIntent(_constants_constants__WEBPACK_IMPORTED_MODULE_5__.ViewOrderHistoryIntent, context, {
+                  appId: 'fdc3-oms-order-history'
+                }).catch(function (error) {
                   console.error('ViewOrderHistory intent failed. Error: ', error);
                 });
               case 4:
@@ -90,14 +92,10 @@ var AcmeService = /*#__PURE__*/function () {
               return _this.fdc3.findIntent(_constants_constants__WEBPACK_IMPORTED_MODULE_5__.ViewOrderHistoryIntent);
             case 2:
               intents = _context2.sent;
-              console.log('intents', intents);
-              console.log(!!intents.apps.find(function (i) {
-                return i.name === 'fdc3-oms-order-history';
-              }));
               return _context2.abrupt("return", !!intents.apps.find(function (i) {
                 return i.name === 'fdc3-oms-order-history';
               }));
-            case 6:
+            case 4:
             case "end":
               return _context2.stop();
           }
@@ -217,12 +215,10 @@ var AcmeService = /*#__PURE__*/function () {
                             case 21:
                               if (internalClient) {
                                 _this2.raiseViewOrderHistory({
-                                  data: {
-                                    clientId: internalClient.clientId,
-                                    securityId: {
-                                      ticker: '',
-                                      bbgExchange: ''
-                                    }
+                                  clientId: internalClient.clientId,
+                                  securityId: {
+                                    ticker: '',
+                                    bbgExchange: ''
                                   }
                                 });
                               }
@@ -278,13 +274,11 @@ var AcmeService = /*#__PURE__*/function () {
                   var exchange = RIC[1];
                   if (ticker && typeof ticker === 'string') {
                     _this2.raiseViewOrderHistory({
-                      data: {
-                        securityId: {
-                          ticker: ticker,
-                          bbgExchange: exchange
-                        },
-                        clientId: ''
-                      }
+                      securityId: {
+                        ticker: ticker,
+                        bbgExchange: exchange
+                      },
+                      clientId: ''
                     });
                   }
                 });
@@ -521,6 +515,8 @@ var AcmeService = /*#__PURE__*/function () {
                 (_this$fdc2 = this.fdc3) === null || _this$fdc2 === void 0 ? void 0 : _this$fdc2.raiseIntent('NewOrder', {
                   type: 'fdc3.order',
                   order: order
+                }, {
+                  appId: 'fdc3-oms-new-order'
                 });
               case 30:
               case "end":
@@ -1462,6 +1458,8 @@ var start = /*#__PURE__*/function () {
             _context.next = 3;
             return service.initialize();
           case 3:
+            window.acmeService = service;
+          case 4:
           case "end":
             return _context.stop();
         }

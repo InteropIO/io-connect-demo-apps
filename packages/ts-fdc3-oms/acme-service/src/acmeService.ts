@@ -101,14 +101,12 @@ class AcmeService {
 
                 if (internalClient) {
                     this.raiseViewOrderHistory({
-                        data: {
-                            clientId: internalClient.clientId,
-                            securityId: {
-                                ticker: '',
-                                bbgExchange: '',
-                            },
+                        clientId: internalClient.clientId,
+                        securityId: {
+                            ticker: '',
+                            bbgExchange: '',
                         },
-                    })
+                                            })
                 }
             },
         })
@@ -164,14 +162,12 @@ class AcmeService {
 
                 if (ticker && typeof ticker === 'string') {
                     this.raiseViewOrderHistory({
-                        data: {
-                            securityId: {
-                                ticker: ticker,
-                                bbgExchange: exchange,
-                            },
-                            clientId: '',
+                        securityId: {
+                            ticker: ticker,
+                            bbgExchange: exchange,
                         },
-                    })
+                        clientId: '',
+                                            })
                 }
             }
         )
@@ -306,16 +302,22 @@ class AcmeService {
             quantity: args.quantity,
         }
 
-        this.fdc3?.raiseIntent('NewOrder', {
+        this.fdc3?.raiseIntent(
+            'NewOrder', 
+            {
                 type: 'fdc3.order',
-                order,
-            }
+                order      
+            },
+            { appId: 'fdc3-oms-new-order' }
         )
     }
 
     private raiseViewOrderHistory = async (context: any): Promise<void> => {
         if (await this.shouldRaiseIntent()) {
-            this.fdc3?.raiseIntent(ViewOrderHistoryIntent, context)
+            this.fdc3?.raiseIntent(
+                ViewOrderHistoryIntent, 
+                context,
+                { appId: 'fdc3-oms-order-history' })
                 .catch((error: Error) => {
                     console.error(
                         'ViewOrderHistory intent failed. Error: ',
@@ -327,8 +329,7 @@ class AcmeService {
 
     private shouldRaiseIntent = async (): Promise<any> => {
         const intents = await this.fdc3.findIntent(ViewOrderHistoryIntent)
-        console.log('intents', intents)
-        console.log(!!intents.apps.find((i: any) => i.name === 'fdc3-oms-order-history'))
+        
         return !!intents.apps.find((i: any) => i.name === 'fdc3-oms-order-history')
     }
 
