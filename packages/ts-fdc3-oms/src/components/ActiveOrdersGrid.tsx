@@ -296,10 +296,14 @@ const ActiveOrdersGrid = (props: OrderGridParam): JSX.Element => {
                       }
                     : { type: 'fdc3.order' }
 
-                intentsApi?.raiseIntent('NewOrder', {
-                    type: 'fdc3.order',
-                    order,
-                })
+                intentsApi?.raiseIntent(
+                    'NewOrder',
+                    {
+                        type: 'fdc3.order',
+                        order,
+                    },
+                    { appId: 'fdc3-oms-new-order' }
+                )
             } else {
                 props.setNewOrderView(true)
             }
