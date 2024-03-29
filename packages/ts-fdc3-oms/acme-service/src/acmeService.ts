@@ -167,7 +167,7 @@ class AcmeService {
                             bbgExchange: exchange,
                         },
                         clientId: '',
-                                            })
+                    })
                 }
             }
         )
