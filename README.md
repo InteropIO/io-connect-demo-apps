@@ -4,11 +4,6 @@
 
 This monorepo contains demo applications designed for a trial experience within the io.Connect Browser, using the FDC3 context API.
 
-- [Fixed Income Orders Blotter](https://github.com/InteropIO/fixed-income-orders-blotter)
-- [Fixed Income Executions Blotter](https://github.com/InteropIO/fixed-income-executions-blotter)
-- [Fixed Income Axes Blotter](https://github.com/InteropIO/fixed-income-axes-blotter)
-- [Fixed Income Similar Bonds](https://github.com/InteropIO/fixed-income-similar-bonds)
-
 ## Getting Started
 
 Before running or building the projects, ensure that you have Node.js and npm installed on your machine. Then, follow these steps to install dependencies and start the applications:
