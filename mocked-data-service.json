@@ -1,0 +1,20 @@
+{
+
+    "name": "mock-data-service",
+    "type": "window",
+    "title": "Data Service",
+    "service": true,
+    "hidden": true,
+    "autoStart": true,
+    "allowMultiple": false,
+    "caption": "Data Service",
+    "details": {
+        "width": 250,
+        "height": 150,
+        "top": 200,
+        "left": 200,
+        "isSticky": false,
+        "name": "Data Service",
+        "url": "http://localhost:3003"
+    }
+}
