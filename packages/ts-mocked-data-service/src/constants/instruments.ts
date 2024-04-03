@@ -21,22 +21,22 @@ export const instruments: InstrumentInfo[] = [
     url: MORNING_STAR_BASE_URL + '0P00007NYP',
   },
 
-  {
-    ticker: 'BARC',
-    bbgExchange: 'LN',
-    isin: 'GB0031348658',
-    description: 'Barclays Plc',
-    currency: 'GBX',
-    price: {
-      close: 200.85,
-      yearLow: 106.76,
-      yearHigh: 217.63,
-    },
-    volume: {
-      average: 36564354,
-    },
-    url: MORNING_STAR_BASE_URL + '0P00007NZP',
-  },
+  // {
+  //   ticker: 'BARC',
+  //   bbgExchange: 'LN',
+  //   isin: 'GB0031348658',
+  //   description: 'Barclays Plc',
+  //   currency: 'GBX',
+  //   price: {
+  //     close: 200.85,
+  //     yearLow: 106.76,
+  //     yearHigh: 217.63,
+  //   },
+  //   volume: {
+  //     average: 36564354,
+  //   },
+  //   url: MORNING_STAR_BASE_URL + '0P00007NZP',
+  // },
 
   {
     ticker: 'BATS',

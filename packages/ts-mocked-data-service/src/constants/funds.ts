@@ -49,11 +49,11 @@ export const Funds: FundInfo[] = [
         portfolioPercent: 2.8,
       },
       { investment: 'Diageo Plc', quantity: 2800000, portfolioPercent: 2.8 },
-      {
-        investment: 'Barclays Plc',
-        quantity: 2500000,
-        portfolioPercent: 2.5,
-      },
+      // {
+      //   investment: 'Barclays Plc',
+      //   quantity: 2500000,
+      //   portfolioPercent: 2.5,
+      // },
       {
         investment: 'Diageo Plc',
         quantity: 2400000,
@@ -86,11 +86,11 @@ export const Funds: FundInfo[] = [
         quantity: 4370000,
         portfolioPercent: 4.37,
       },
-      {
-        investment: 'Barclays Plc',
-        quantity: 2050000,
-        portfolioPercent: 2.05,
-      },
+      // {
+      //   investment: 'Barclays Plc',
+      //   quantity: 2050000,
+      //   portfolioPercent: 2.05,
+      // },
       {
         investment: 'AstraZeneca Plc',
         quantity: 1880000,
@@ -134,11 +134,11 @@ export const Funds: FundInfo[] = [
         quantity: 4400000,
         portfolioPercent: 4.4,
       },
-      {
-        investment: 'Barclays Plc',
-        quantity: 4370000,
-        portfolioPercent: 4.37,
-      },
+      // {
+      //   investment: 'Barclays Plc',
+      //   quantity: 4370000,
+      //   portfolioPercent: 4.37,
+      // },
       { investment: 'JD.com', quantity: 2050000, portfolioPercent: 2.05 },
       {
         investment: 'Vodafone Group Plc',
@@ -192,11 +192,11 @@ export const Funds: FundInfo[] = [
         quantity: 5020000,
         portfolioPercent: 5.02,
       },
-      {
-        investment: 'Barclays Plc',
-        quantity: 4740000,
-        portfolioPercent: 4.74,
-      },
+      // {
+      //   investment: 'Barclays Plc',
+      //   quantity: 4740000,
+      //   portfolioPercent: 4.74,
+      // },
       {
         investment: 'HSBC Holdings Plc ORD',
         quantity: 4500000,
@@ -244,11 +244,11 @@ export const Funds: FundInfo[] = [
         quantity: 3680000,
         portfolioPercent: 3.68,
       },
-      {
-        investment: 'Barclays Plc',
-        quantity: 3370000,
-        portfolioPercent: 3.37,
-      },
+      // {
+      //   investment: 'Barclays Plc',
+      //   quantity: 3370000,
+      //   portfolioPercent: 3.37,
+      // },
       {
         investment: 'AstraZeneca Plc',
         quantity: 3210000,
