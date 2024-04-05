@@ -153,7 +153,7 @@ const TradeHistoryGrid = (props: TradeHistoryGridProps): JSX.Element => {
         if (filtOrderId) {
             exec.action(async () => {
                 const trades = await getOrderTrades(filtOrderId, mockTime)
-                glue?.windows?.my()?.setTitle(`Trades: Order ${filtOrderId}`)
+                glue?.windows?.my()?.setTitle(`FDC3 Trades: Order ${filtOrderId}`)
                 setRowData(trades)
             })
             return
@@ -171,7 +171,7 @@ const TradeHistoryGrid = (props: TradeHistoryGridProps): JSX.Element => {
                     fdc3Instrument,
                     mockTime
                 )
-                glue?.windows?.my()?.setTitle(`Trades: ${filtInstrument}`)
+                glue?.windows?.my()?.setTitle(`FDC3 Trades: ${filtInstrument}`)
                 setRowData(trades)
             })
             return
@@ -180,7 +180,7 @@ const TradeHistoryGrid = (props: TradeHistoryGridProps): JSX.Element => {
         // no filter, get all trades
         exec.action(async () => {
             const trades = await getAllTrades(mockTime)
-            glue?.windows?.my()?.setTitle('Trade History')
+            glue?.windows?.my()?.setTitle('FDC3 Trade History')
             setRowData(trades)
         })
     }, [time, filtOrderId, filtInstrument, mockTimeOffset])

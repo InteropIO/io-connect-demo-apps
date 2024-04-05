@@ -194,8 +194,8 @@ const Watchlist = (): JSX.Element => {
 
     useEffect(() => {
         if (selectedWatchlist && selectedWatchlist.name)
-            document.title = 'OMS - ' + selectedWatchlist.name
-        else document.title = 'OMS - Watchlist'
+            document.title = 'FDC3 - ' + selectedWatchlist.name
+        else document.title = 'FDC3 - Watchlist'
     }, [selectedWatchlist])
 
     const getContextMenuItems = useCallback(
