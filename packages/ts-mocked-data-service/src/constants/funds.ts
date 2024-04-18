@@ -24,16 +24,6 @@ export const Funds: FundInfo[] = [
         portfolioPercent: 6.7,
       },
       {
-        investment: 'Informa Plc ORD',
-        quantity: 5000000,
-        portfolioPercent: 5,
-      },
-      {
-        investment: 'ITV Plc',
-        quantity: 4000000,
-        portfolioPercent: 4,
-      },
-      {
         investment: 'Vodafone Group Plc',
         quantity: 3400000,
         portfolioPercent: 3.4,
@@ -72,11 +62,6 @@ export const Funds: FundInfo[] = [
         portfolioPercent: 6.29,
       },
       {
-        investment: 'ITV Plc',
-        quantity: 5810000,
-        portfolioPercent: 5.81,
-      },
-      {
         investment: 'Diageo Plc',
         quantity: 4400000,
         portfolioPercent: 4.4,
@@ -97,11 +82,6 @@ export const Funds: FundInfo[] = [
         portfolioPercent: 1.88,
       },
       {
-        investment: 'Informa Plc ORD',
-        quantity: 1820000,
-        portfolioPercent: 1.82,
-      },
-      {
         investment: 'Lloyds Banking Group Plc',
         quantity: 1670000,
         portfolioPercent: 1.82,
@@ -110,11 +90,6 @@ export const Funds: FundInfo[] = [
         investment: 'Rio Tinto ORD',
         quantity: 1510000,
         portfolioPercent: 1.51,
-      },
-      {
-        investment: 'GlaxoSmithKline Plc',
-        quantity: 1500000,
-        portfolioPercent: 1.5,
       },
     ]),
   },
@@ -130,11 +105,6 @@ export const Funds: FundInfo[] = [
       },
       { investment: 'TSMC', quantity: 5810000, portfolioPercent: 5.81 },
       {
-        investment: 'ITV Plc',
-        quantity: 4400000,
-        portfolioPercent: 4.4,
-      },
-      {
         investment: 'Barclays Plc',
         quantity: 4370000,
         portfolioPercent: 4.37,
@@ -146,19 +116,9 @@ export const Funds: FundInfo[] = [
         portfolioPercent: 1.88,
       },
       {
-        investment: 'GlaxoSmithKline Plc',
-        quantity: 1820000,
-        portfolioPercent: 1.82,
-      },
-      {
         investment: 'AstraZeneca Plc',
         quantity: 1670000,
         portfolioPercent: 1.67,
-      },
-      {
-        investment: 'Informa Plc ORD',
-        quantity: 1510000,
-        portfolioPercent: 1.51,
       },
       {
         investment: 'Lloyds Banking Group Plc',
@@ -212,16 +172,6 @@ export const Funds: FundInfo[] = [
         quantity: 4340000,
         portfolioPercent: 4.34,
       },
-      {
-        investment: 'ITV Plc',
-        quantity: 4300000,
-        portfolioPercent: 4.3,
-      },
-      {
-        investment: 'Informa Plc ORD',
-        quantity: 4260000,
-        portfolioPercent: 4.26,
-      },
     ]),
   },
   {
@@ -268,16 +218,6 @@ export const Funds: FundInfo[] = [
         investment: 'HSBC Holdings Plc ORD',
         quantity: 2740000,
         portfolioPercent: 2.74,
-      },
-      {
-        investment: 'Informa Plc ORD',
-        quantity: 2740000,
-        portfolioPercent: 2.74,
-      },
-      {
-        investment: 'ITV Plc',
-        quantity: 2610000,
-        portfolioPercent: 2.61,
       },
     ]),
   },
