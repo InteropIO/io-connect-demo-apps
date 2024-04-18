@@ -116,7 +116,7 @@ Example
 {
   data:
     {
-      ticker: "BARC",
+      ticker: "BCS",
       volume: 36564354,
       lastTradedVolume: 10000,
       lastPrice: 212.901,
