@@ -199,7 +199,7 @@ const intentContext = {
     instrument: {
         type: 'fdc3.instrument',
         id: {
-            BBG: 'BARC:LN',
+            BBG: 'BCS:LN',
         },
     },
 }

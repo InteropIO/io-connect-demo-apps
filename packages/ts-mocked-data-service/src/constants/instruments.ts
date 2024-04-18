@@ -22,7 +22,7 @@ export const instruments: InstrumentInfo[] = [
   },
 
   {
-    ticker: 'BARC',
+    ticker: 'BCS',
     bbgExchange: 'LN',
     isin: 'GB0031348658',
     description: 'Barclays Plc',
