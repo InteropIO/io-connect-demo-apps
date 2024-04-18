@@ -29,9 +29,8 @@ const useInstrumentDetailsContext = (): UseInstrumentDetailsContext => {
     >()
 
     const isOnFDC3CChannel = useCallback(
-        async () =>
-            window.fdc3 && (await window.fdc3.getCurrentChannel()) != null,
-        [window.fdc3]
+        () => window.fdc3 && glue.channels.my() != null,
+        [window.fdc3, glue]
     )
 
     const isOnChannel = useCallback(() => glue.channels.my() != null, [glue])
@@ -65,11 +64,11 @@ const useInstrumentDetailsContext = (): UseInstrumentDetailsContext => {
         }
 
         // FDC3's context has top precedence.
-        const onFDC3Channel = await isOnFDC3CChannel()
+        const onFDC3Channel = isOnFDC3CChannel()
 
         // Channel's context has second precedence.
-        const onChannel = await isOnChannel()
-        
+        const onChannel = isOnChannel()
+
         // Workspace context has less precedence than channels.
         const inWsp = await isInWorkspace()
         const myWsp = await glue.workspaces?.getMyWorkspace().catch(() => null)
@@ -95,8 +94,8 @@ const useInstrumentDetailsContext = (): UseInstrumentDetailsContext => {
                     setCtxSymbol(contextData)
                 })
                 .catch(console.error)
-        } 
-        
+        }
+
         if (onChannel) {
             console.log(
                 '[useInstrumentDetailsContext] getting instrument details from channel ctx...'
@@ -108,15 +107,15 @@ const useInstrumentDetailsContext = (): UseInstrumentDetailsContext => {
                 .then(({ data }) => setCtxSymbol(data))
                 .catch(console.error)
         }
-        
+
         if (inWsp && myWsp != null) {
             console.log(
                 '[useInstrumentDetailsContext] getting instrument details from workspace ctx...'
             )
 
             return myWsp.getContext().then(setCtxSymbol).catch(console.error)
-        } 
-        
+        }
+
         // Global context has least precedence.
         console.log(
             '[useInstrumentDetailsContext] getting instrument details global ctx...'
@@ -125,8 +124,7 @@ const useInstrumentDetailsContext = (): UseInstrumentDetailsContext => {
             .get(INSTRUMENT_DETAILS)
             .then(setCtxSymbol)
             .catch(console.error)
-        
-    }, [setFdc3Instrument, isInWorkspace, isOnChannel, glue])
+    }, [setFdc3Instrument, isInWorkspace, isOnFDC3CChannel, isOnChannel, glue])
 
     useEffect(() => {
         async function subscribeToFdc3Updates() {
@@ -213,36 +211,37 @@ const useInstrumentDetailsContext = (): UseInstrumentDetailsContext => {
     )
 
     const publish = useCallback(
-        async ({ ticker, BBG_EXCHANGE }: Fdc3InstrumentId) => {
+        async ({ ticker, RIC, BBG, BBG_EXCHANGE }: Fdc3InstrumentId) => {
             // TODO: Guard looping.
-            const RIC =
-                ticker && BBG_EXCHANGE
+            const ric =
+                RIC ||
+                (ticker && BBG_EXCHANGE
                     ? formatInstrument(ticker, BBG_EXCHANGE)
-                    : null
+                    : null)
 
-            const BBG = formatInstrumentForBbg(ticker, BBG_EXCHANGE)
+            const bbg = BBG || formatInstrumentForBbg(ticker, BBG_EXCHANGE)
 
             const data = {
                 type: 'fdc3.instrument',
                 id: {
                     ticker,
-                    RIC,
-                    BBG,
+                    RIC: ric,
+                    BBG: bbg,
                 },
             }
-            
-            const onFDC3Channel = await isOnFDC3CChannel()
-            const onChannel = await isOnChannel()
+
+            const onFDC3Channel = isOnFDC3CChannel()
+            const onChannel = isOnChannel()
             const inWsp = await isInWorkspace()
-            
+
             if (onFDC3Channel) {
-                return window.fdc3.broadcast(data)
-            } 
-            
+                window.fdc3.broadcast(data)
+            }
+
             if (onChannel) {
-                return glue.channels.publish(data)
-            } 
-            
+                glue.channels.publish(data)
+            }
+
             if (inWsp) {
                 return glue.workspaces
                     ?.getMyWorkspace()
@@ -250,7 +249,7 @@ const useInstrumentDetailsContext = (): UseInstrumentDetailsContext => {
                     .catch(console.error)
             }
 
-            return glue.contexts.update(INSTRUMENT_DETAILS, data)           
+            return glue.contexts.update(INSTRUMENT_DETAILS, data)
         },
         [isOnChannel, isInWorkspace, glue]
     )

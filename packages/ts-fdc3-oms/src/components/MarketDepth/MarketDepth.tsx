@@ -11,7 +11,7 @@ import useInstrumentDetailsContext from '../../hooks/useInstrumentDetailsContext
 import { useMorningStarSync } from '../../hooks/useMorningStarSync'
 import { useAddIntentListenerInstrument, useGlueTheme } from '../../util/glue'
 import { MarketDepthIntent } from '../../constants'
-import "../../css/market-depth.css"
+import '../../css/market-depth.css'
 
 interface MarketDepthData {
     ticker: string
