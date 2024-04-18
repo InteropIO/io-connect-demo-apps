@@ -9,6 +9,7 @@
     "@glue42/theme": "^4.0.6",
     "@glue42/workspaces-api": "^1.17.3",
     "@interopio/fdc3": "^2.2.0",
+    "@interopio/theme-demo-apps": "^4.1.2",
     "@types/chroma-js": "^2.1.4",
     "@types/node": "^18.11.9",
     "@types/react": "^18.0.25",

@@ -18,15 +18,12 @@ export function callSafe(fn: CallableFunction): CallableFunction {
 }
 
 export function setTheme(theme: string): void {
-    if (theme === 'dark' || theme === 'light') {
-        const isDark = theme === 'dark'
-        const htmlEl = document.getElementsByTagName('html')[0]
+    const htmlEl = document.getElementsByTagName('html')[0]
 
-        if (isDark) {
-            htmlEl.classList.replace('light', theme)
-        } else {
-            htmlEl.classList.replace('dark', theme)
-        }
+    if (theme === 'dark') {
+        htmlEl.classList.replace('light', theme)
+    } else if (theme === 'light') {
+        htmlEl.classList.replace('dark', theme)
     }
 }
 

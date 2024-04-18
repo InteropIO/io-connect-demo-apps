@@ -19,6 +19,7 @@ import MarketDepth from './components/MarketDepth/MarketDepth'
 import Portfolio from './components/Portfolio/Portfolio'
 import useInitConditions from './hooks/useInitConditions'
 import { GlueContext } from '@glue42/react-hooks'
+import '@interopio/theme-demo-apps/dist/io.applications.css';
 
 const OrdersPage = React.lazy(() => import('./components/OrdersPage'))
 const OrderHistoryPage = React.lazy(
