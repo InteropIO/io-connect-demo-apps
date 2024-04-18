@@ -1,7 +1,8 @@
 export default function Loader(): JSX.Element {
     return (
-        <div className="tick42-loader active">
-            <div className="tick42-loader-text">Loading ...</div>
+        <div className="loader-wrapper active">
+            <div className="loader"></div>
+            <div className="loader-text">Loading...</div>
         </div>
     )
 }

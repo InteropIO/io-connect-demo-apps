@@ -10,8 +10,9 @@ Before running or building the projects, ensure that you have Node.js and npm in
 
 ### Step 1: Config Files
 
-Paste the `fdc3-oms.json` file in your `C:\\*insert_user_path\*\AppData\Local\interop.io\io.Connect Desktop\Desktop\config\apps` folder
-Paste the `fdc3-oms-workspace.json` in your `C:\\*insert_user_path\*\AppData\Local\interop.io\io.Connect Desktop\UserData\DEMO-IO\layouts` folder
+1. Paste the `mocked-data-service.json` file in your `C:\\*insert_user_path\*\AppData\Local\interop.io\io.Connect Desktop\Desktop\config\apps` folder
+2. Paste the `fdc3-oms.json` file in your `C:\\*insert_user_path\*\AppData\Local\interop.io\io.Connect Desktop\Desktop\config\apps` folder
+3. Paste the `fdc3-oms-workspace.json` in your `C:\\*insert_user_path\*\AppData\Local\interop.io\io.Connect Desktop\UserData\DEMO-IO\layouts` folder
 
 ### Step 2: Installing Dependencies
 
