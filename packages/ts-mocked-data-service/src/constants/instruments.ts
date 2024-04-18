@@ -39,7 +39,7 @@ export const instruments: InstrumentInfo[] = [
   },
 
   {
-    ticker: 'BATS',
+    ticker: 'BTI',
     bbgExchange: 'LN',
     isin: 'GB0002875804',
     description: 'British American Tobacco Plc',
@@ -56,7 +56,7 @@ export const instruments: InstrumentInfo[] = [
   },
 
   {
-    ticker: 'DGE',
+    ticker: 'DEO',
     bbgExchange: 'LN',
     isin: 'GB0002374006',
     description: 'Diageo Plc',
@@ -73,24 +73,7 @@ export const instruments: InstrumentInfo[] = [
   },
 
   {
-    ticker: 'GSK',
-    bbgExchange: 'LN',
-    isin: 'GB0009252882',
-    description: 'GlaxoSmithKline Plc',
-    currency: 'GBX',
-    price: {
-      close: 1544.4,
-      yearLow: 1190.8,
-      yearHigh: 1554.2,
-    },
-    volume: {
-      average: 6866664,
-    },
-    url: MORNING_STAR_BASE_URL + '0P00007OD0',
-  },
-
-  {
-    ticker: 'HSBA',
+    ticker: 'HSBC',
     bbgExchange: 'LN',
     isin: 'GB0005405286',
     description: 'HSBC Holdings Plc ORD',
@@ -107,41 +90,7 @@ export const instruments: InstrumentInfo[] = [
   },
 
   {
-    ticker: 'INF',
-    bbgExchange: 'LN',
-    isin: 'GB00BMJ6DW54',
-    description: 'Informa Plc ORD',
-    currency: 'GBX',
-    price: {
-      close: 547.6,
-      yearLow: 459.8,
-      yearHigh: 603.6,
-    },
-    volume: {
-      average: 4618680,
-    },
-    url: MORNING_STAR_BASE_URL + '0P0000KNCP',
-  },
-
-  {
-    ticker: 'ITV',
-    bbgExchange: 'LN',
-    isin: 'GB0033986497',
-    description: 'ITV Plc',
-    currency: 'GBX',
-    price: {
-      close: 117.85,
-      yearLow: 98.06,
-      yearHigh: 134.15,
-    },
-    volume: {
-      average: 11095831,
-    },
-    url: MORNING_STAR_BASE_URL + '0P00007OI2',
-  },
-
-  {
-    ticker: 'LLOY',
+    ticker: 'LYG',
     bbgExchange: 'LN',
     isin: 'GB0008706128',
     description: 'Lloyds Banking Group Plc',
