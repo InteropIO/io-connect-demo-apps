@@ -21,7 +21,7 @@ import { GlueContext } from '@glue42/react-hooks'
 import { getRelevantContextNodes } from '../../util/ag-grid'
 import { pushToBbgWorksheet } from '../../util/bbg'
 import { BBG_WORKSHEET_NAME } from '../../constants'
-import useEntityPublisher from '../../hooks/useContextPublisher'
+import { getFdc3Instrument } from '../../util/util'
 
 const getTradePositionId = (data: TradePosition) =>
     `${data.book}${data.instrument.ticker}${data.instrument.bbgExchange}`
@@ -35,7 +35,6 @@ const TradingPositions = (): JSX.Element => {
     const [time, setTime] = useState(new Date())
     const [timeOffset, setTimeOffset] = useState(0)
     const { syncInstrument } = useMorningStarSync()
-    const { publishInstrument } = useEntityPublisher(glue)
 
     const mockTime = useMemo(
         () => addTimeOffset(time, timeOffset),
@@ -56,7 +55,10 @@ const TradingPositions = (): JSX.Element => {
 
     const onRowClicked = (event: RowClickedEvent<TradePosition>) => {
         if (event.data?.instrument) {
-            publishInstrument(event.data.instrument)
+            const fdc3Instrument = getFdc3Instrument(event.data.instrument)
+            if (fdc3Instrument?.id) {
+                publish(fdc3Instrument.id)
+            }
             syncInstrument(event.data.instrument.ticker)
         }
     }

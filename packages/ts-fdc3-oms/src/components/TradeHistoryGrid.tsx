@@ -1,7 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { GlueContext } from '@glue42/react-hooks'
 import { Fdc3Order } from '../models/fdc3-order'
-import { ColDef, GetContextMenuItemsParams, GetRowIdParams, RowNode } from 'ag-grid-community'
+import {
+    ColDef,
+    GetContextMenuItemsParams,
+    GetRowIdParams,
+    RowNode,
+} from 'ag-grid-community'
 import useGridHelper from '../hooks/GridHelper'
 import { useCorrectRowSelection, GlueT } from '../util/glue'
 import { OrderTrade } from '../models/orders'
@@ -37,7 +42,6 @@ import {
     sleep,
 } from '../util/util'
 import { useAcmeSettings } from '../hooks/useAcmeSettings'
-import ContextHandler from './Common/ContextHandler'
 import useViewInstrument from '../hooks/useViewInstrument'
 
 const exec = new DelayedLatestActionExecutor(300)
@@ -153,7 +157,9 @@ const TradeHistoryGrid = (props: TradeHistoryGridProps): JSX.Element => {
         if (filtOrderId) {
             exec.action(async () => {
                 const trades = await getOrderTrades(filtOrderId, mockTime)
-                glue?.windows?.my()?.setTitle(`FDC3 Trades: Order ${filtOrderId}`)
+                glue?.windows
+                    ?.my()
+                    ?.setTitle(`FDC3 Trades: Order ${filtOrderId}`)
                 setRowData(trades)
             })
             return
@@ -221,6 +227,14 @@ const TradeHistoryGrid = (props: TradeHistoryGridProps): JSX.Element => {
         setFiltInstrument(instrument)
         setFiltOrderId('')
     }
+
+    useEffect(() => {
+        if (!instrumentContext) {
+            return
+        }
+        const instrumentRIC = instrumentContext?.id?.RIC || ''
+        setInstrumentFromContext(instrumentRIC)
+    }, [instrumentContext])
 
     const onRowClicked = async (ev: { data: OrderTrade }) => {
         await publish({
@@ -322,9 +336,6 @@ const TradeHistoryGrid = (props: TradeHistoryGridProps): JSX.Element => {
                     </AgGridReact>
                 </div>
             </div>
-            <ContextHandler
-                instrumentSetter={setInstrumentFromContext}
-            ></ContextHandler>
         </>
     )
 }

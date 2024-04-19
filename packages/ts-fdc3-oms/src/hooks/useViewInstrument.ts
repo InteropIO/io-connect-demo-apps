@@ -9,10 +9,9 @@ export default function useViewInstrument() {
         const fdc3Instrument = getFdc3Instrument(instrument)
 
         if (window.fdc3 && fdc3Instrument) {
-            raiseIntent(ViewInstrumentIntent, {
-                type: fdc3Instrument?.type || '',
-                data: fdc3Instrument,
-            }).catch(console.error)
+            raiseIntent(ViewInstrumentIntent, fdc3Instrument).catch(
+                console.error
+            )
         }
     }, [])
 }

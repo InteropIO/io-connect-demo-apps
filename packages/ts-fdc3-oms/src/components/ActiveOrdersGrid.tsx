@@ -41,7 +41,6 @@ import {
     BBG_WORKSHEET_NAME,
     INTENT_VIEW_ORDER_TRADE_HISTORY,
     SF_SYSTEM_NAME,
-    ViewInstrumentIntent,
 } from '../constants'
 import {
     METHODNAME_ACME_SYNC_CONTACT,
@@ -57,8 +56,6 @@ import { useOrderValidity } from '../hooks/useOrderValidity'
 import { useMorningStarSync } from '../hooks/useMorningStarSync'
 import DateManipulator from './DateManipulator'
 import { DateIsSameDay, DateEndOfDay } from '../util/datetime'
-import useEntityPublisher from '../hooks/useContextPublisher'
-import ContextHandler from './Common/ContextHandler'
 import {
     formatInstrumentFromId,
     getFdc3Instrument,
@@ -66,6 +63,7 @@ import {
 } from '../util/util'
 import { GlueApiT } from '../util/glueTypes'
 import useViewInstrument from '../hooks/useViewInstrument'
+import useInstrumentDetailsContext from '../hooks/useInstrumentDetailsContext'
 
 export interface OrderGridParam {
     setNewOrderView?: (set: boolean) => void
@@ -157,7 +155,7 @@ const ActiveOrdersGrid = (props: OrderGridParam): JSX.Element => {
     const orderValidity = useOrderValidity()
     const intentsApi = useIntents()
     const { syncInstrument } = useMorningStarSync()
-    const { publishInstrument } = useEntityPublisher(glue)
+    const { publish } = useInstrumentDetailsContext()
     const viewInstrument = useViewInstrument()
 
     useEffect(() => {
@@ -249,19 +247,20 @@ const ActiveOrdersGrid = (props: OrderGridParam): JSX.Element => {
         getOrdersHistory,
     ])
 
-    const onInstrumentReceived = useCallback(
-        (instrument: string) => {
-            const ticker = getTickerFromString(instrument)
-            const selectedNodes = grid?.api?.getSelectedNodes()
-            if (selectedNodes?.length === 1) {
-                const node = selectedNodes[0]
-                if (node.data?.instrument?.ticker !== ticker) {
-                    node.setSelected(false)
-                }
-            }
-        },
-        [grid]
-    )
+    // TODO - handle selection and delete context handler
+    // const onInstrumentReceived = useCallback(
+    //     (instrument: string) => {
+    //         const ticker = getTickerFromString(instrument)
+    //         const selectedNodes = grid?.api?.getSelectedNodes()
+    //         if (selectedNodes?.length === 1) {
+    //             const node = selectedNodes[0]
+    //             if (node.data?.instrument?.ticker !== ticker) {
+    //                 node.setSelected(false)
+    //             }
+    //         }
+    //     },
+    //     [grid]
+    // )
 
     const onNewOrderClick = useCallback(
         (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -364,7 +363,10 @@ const ActiveOrdersGrid = (props: OrderGridParam): JSX.Element => {
                 return
             }
 
-            publishInstrument(event.data.instrument)
+            const fdc3Instrument = getFdc3Instrument(event.data.instrument)
+            if (fdc3Instrument?.id) {
+                publish(fdc3Instrument.id)
+            }
 
             syncInstrument(event.data.instrument.ticker)
 
@@ -414,7 +416,7 @@ const ActiveOrdersGrid = (props: OrderGridParam): JSX.Element => {
                     .catch(console.error)
             }
         },
-        [intentsApi, clients, publishInstrument, syncInstrument]
+        [intentsApi, clients, publish, syncInstrument]
     )
 
     const getContextMenuItems = useCallback(
@@ -599,9 +601,6 @@ const ActiveOrdersGrid = (props: OrderGridParam): JSX.Element => {
                     ></AgGridReact>
                 </div>
             </div>
-            <ContextHandler
-                instrumentSetter={onInstrumentReceived}
-            ></ContextHandler>
         </>
     )
 }
